@@ -43,19 +43,19 @@ def render_sidebar(branding: dict):
             """, unsafe_allow_html=True)
         
         # User info
-                user = st.session_state.get("user", {})
-                if user:
-                        st.markdown(f"""
-                        <div class='ewp-user-pill'>
-                            <div style='display:flex;align-items:center;gap:10px'>
-                                <div style='width:36px;height:36px;border-radius:8px;background:{primary_color};display:flex;align-items:center;justify-content:center;color:white'>👤</div>
-                                <div>
-                                    <div style='font-weight:600;color:#111827'>{user.get('name', 'User')}</div>
-                                    <div style='color:#6B7280;font-size:12px'>{user.get('role', 'Employee').title()}</div>
-                                </div>
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
+        user = st.session_state.get("user", {})
+        if user:
+            st.markdown(f"""
+            <div class='ewp-user-pill'>
+                <div style='display:flex;align-items:center;gap:10px'>
+                    <div style='width:36px;height:36px;border-radius:8px;background:{primary_color};display:flex;align-items:center;justify-content:center;color:white'>👤</div>
+                    <div>
+                        <div style='font-weight:600;color:#111827'>{user.get('name', 'User')}</div>
+                        <div style='color:#6B7280;font-size:12px'>{user.get('role', 'Employee').title()}</div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         
         st.markdown("---")
         
