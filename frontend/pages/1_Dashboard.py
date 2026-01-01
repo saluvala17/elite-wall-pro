@@ -21,23 +21,23 @@ render_sidebar(branding)
 
 # Global UI styles (QuickBooks-inspired card layout, spacing, type)
 st.markdown(
-        f"""
+    """
         <style>
         :root{{ --accent: #2CA01C; --muted-1: #E5E7EB; --muted-2: #F3F4F6; --card-radius:8px; }}
         html, body {{font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}}
-        .page-header{{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:16px;}}
-        .title{{font-size:22px;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px}}
-        .subtle{{color:#6B7280;font-size:13px}}
-        .action-pill{{background:var(--muted-2);border:1px solid var(--muted-1);padding:6px 10px;border-radius:6px;color:#111827;font-size:13px}}
-        .card{{background:#ffffff;border:1px solid var(--muted-1);border-radius:var(--card-radius);padding:18px;margin-bottom:18px;box-shadow:0 1px 2px rgba(16,24,40,0.04)}}
-        .kpi-row{{display:flex;gap:16px;align-items:stretch}}
-        .kpi{{flex:1;background:transparent;padding:12px;border-radius:6px;border:1px solid #F3F4F6;display:flex;flex-direction:column;gap:6px}}
-        .kpi .label{font-size:13px;color:#6B7280}
-        .kpi .value{font-size:18px;font-weight:700;color:#111827}
-        .section-title{font-size:16px;font-weight:600;color:#111827;margin-bottom:12px}
-        .job-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:6px;border:1px solid var(--muted-2);margin-bottom:8px}
-        .profit-positive{color:var(--accent);font-weight:600}
-        .profit-negative{color:#DC2626;font-weight:600}
+    .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:16px;}
+    .title{font-size:22px;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px}
+    .subtle{color:#6B7280;font-size:13px}
+    .action-pill{background:var(--muted-2);border:1px solid var(--muted-1);padding:6px 10px;border-radius:6px;color:#111827;font-size:13px}
+    .card{background:#ffffff;border:1px solid var(--muted-1);border-radius:var(--card-radius);padding:18px;margin-bottom:18px;box-shadow:0 1px 2px rgba(16,24,40,0.04)}
+    .kpi-row{display:flex;gap:16px;align-items:stretch}
+    .kpi{flex:1;background:transparent;padding:12px;border-radius:6px;border:1px solid #F3F4F6;display:flex;flex-direction:column;gap:6px}
+    .kpi .label{font-size:13px;color:#6B7280}
+    .kpi .value{font-size:18px;font-weight:700;color:#111827}
+    .section-title{font-size:16px;font-weight:600;color:#111827;margin-bottom:12px}
+    .job-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:6px;border:1px solid var(--muted-2);margin-bottom:8px}
+    .profit-positive{color:var(--accent);font-weight:600}
+    .profit-negative{color:#DC2626;font-weight:600}
         </style>
         """,
         unsafe_allow_html=True,
