@@ -108,34 +108,34 @@ def apply_global_css(primary_color: str):
 
         [data-testid="stSidebar"] > div:first-child {{
             background: transparent;
-            padding-top: 1.5rem;
+            padding-top: 0.5rem;
         }}
 
-        /* Sidebar Logo - Top Left Corner */
+        /* Sidebar Logo - Absolute Top Corner (Like Fasto) */
         .sidebar-logo {{
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 20px 12px 16px 12px;
+            padding: 16px 16px 12px 16px;
             margin: 0;
         }}
 
         .sidebar-logo-icon {{
             background: rgba(255, 255, 255, 0.2);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             flex-shrink: 0;
             border: 2px solid rgba(255, 255, 255, 0.3);
         }}
 
         .sidebar-logo-text {{
             color: #ffffff;
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 800;
             letter-spacing: -0.02em;
         }}
@@ -552,7 +552,7 @@ def render_enhanced_sidebar(branding):
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown('<div style="margin: 24px 0;"></div>', unsafe_allow_html=True)
+        st.markdown('<div style="margin: 20px 0;"></div>', unsafe_allow_html=True)
         
         # Unified Navigation Menu (No Section Headers)
         if st.button("🏠  Dashboard", key="nav_home", use_container_width=True):
