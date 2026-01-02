@@ -1,107 +1,444 @@
+"""Dashboard Page - Enhanced Modern UI"""
 import streamlit as st
-from datetime import datetime
-from frontend.api_client import get_recent_jobs, get_recent_receipts, get_recent_customers, get_recent_vendors
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
 
-# Set page configuration
-st.set_page_config(
-    page_title="Elite Wall Pro - Dashboard",
-    page_icon="🏠",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
+st.set_page_config(page_title="Dashboard | Elite Wall Pro", page_icon="📊", layout="wide")
 
-# Define custom CSS styles
+# Check auth
+if not st.session_state.get("authenticated"):
+    st.switch_page("app.py")
+    st.stop()
+
+from components.sidebar import render_sidebar
+
+# Get branding
+tenant = st.session_state.get("tenant", {})
+branding = tenant.get("branding", {"primary_color": "#2CA01C", "company_name": "Elite Wall Pro"})
+
+render_sidebar(branding)
+
+# Enhanced Global UI Styling
+primary_color = branding.get("primary_color", "#2CA01C")
+
 st.markdown(
-    """
+    f"""
     <style>
-    .container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 20px;
-    }
-    .card {
-        background-color: #fff;
+    /* ===== Global Foundation ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    html, body, [class*="css"] {{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background-color: #f7f9fc;
+        color: #1a1a1a;
+    }}
+
+    .block-container {{
+        padding-top: 2rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+        max-width: 1400px !important;
+    }}
+
+    /* ===== Page Header ===== */
+    .page-header {{
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #e8edf5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }}
+
+    .page-title {{
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }}
+
+    .page-subtitle {{
+        font-size: 1.05rem;
+        color: #64748b;
+        font-weight: 400;
+    }}
+
+    .export-button {{
+        background: #ffffff;
+        border: 1px solid #e8edf5;
+        padding: 10px 20px;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        color: #334155;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }}
+
+    .export-button:hover {{
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
+    }}
+
+    /* ===== Cards ===== */
+    .card {{
+        background: #ffffff;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e8edf5;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+        margin-bottom: 24px;
+    }}
+
+    /* ===== KPI Cards ===== */
+    [data-testid="stMetric"] {{
+        background: #ffffff;
         padding: 20px;
-    }
-    .card-header {
-        font-size: 18px;
-        font-weight: bold;
+        border-radius: 10px;
+        border: 1px solid #e8edf5;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        transition: all 0.2s ease;
+    }}
+
+    [data-testid="stMetric"]:hover {{
+        border-color: {primary_color}40;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+        transform: translateY(-2px);
+    }}
+
+    [data-testid="stMetric"] label {{
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        color: #64748b !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }}
+
+    [data-testid="stMetric"] [data-testid="stMetricValue"] {{
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }}
+
+    /* ===== Section Headers ===== */
+    .section-header {{
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e8edf5;
+    }}
+
+    /* ===== Job Table ===== */
+    .job-table-row {{
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 16px;
+        padding: 16px 20px;
+        background: #ffffff;
+        border: 1px solid #e8edf5;
+        border-radius: 8px;
         margin-bottom: 10px;
-    }
-    .card-content {
-        font-size: 14px;
-        color: #555;
-    }
+        transition: all 0.2s ease;
+    }}
+
+    .job-table-row:hover {{
+        border-color: {primary_color}40;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transform: translateY(-1px);
+    }}
+
+    .job-info {{
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }}
+
+    .job-number {{
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 1rem;
+    }}
+
+    .job-name {{
+        color: #64748b;
+        font-size: 0.875rem;
+    }}
+
+    .job-metric {{
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }}
+
+    .metric-label {{
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 500;
+    }}
+
+    .metric-value {{
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 1rem;
+    }}
+
+    .profit-positive {{
+        color: #059669;
+        font-weight: 600;
+    }}
+
+    .profit-negative {{
+        color: #dc2626;
+        font-weight: 600;
+    }}
+
+    /* ===== Chart Containers ===== */
+    .chart-container {{
+        background: #ffffff;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e8edf5;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }}
+
+    /* ===== Empty State ===== */
+    .empty-state {{
+        text-align: center;
+        padding: 60px 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 2px dashed #e8edf5;
+    }}
+
+    .empty-state-icon {{
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }}
+
+    .empty-state-title {{
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.5rem;
+    }}
+
+    .empty-state-text {{
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }}
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {{
+        .block-container {{
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }}
+        
+        .job-table-row {{
+            grid-template-columns: 1fr;
+        }}
+        
+        .page-header {{
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }}
+    }}
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Fetch data from API
-recent_jobs = get_recent_jobs()
-recent_receipts = get_recent_receipts()
-recent_customers = get_recent_customers()
-recent_vendors = get_recent_vendors()
+# Enhanced Header
+st.markdown(f"""
+<div class='page-header'>
+    <div>
+        <div class='page-title'>📊 Dashboard</div>
+        <div class='page-subtitle'>Overview of jobs, costs, and margins</div>
+    </div>
+    <div>
+        <button class='export-button'>📥 Export</button>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-# Render the dashboard
-st.title("Dashboard")
+api = st.session_state.api_client
 
-with st.container():
-    # Recent Jobs
-    with st.container():
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="card-header">Recent Jobs</div>
-                <div class="card-content">
-                    {len(recent_jobs)} recent jobs
+try:
+    jobs = api.get_jobs()
+    
+    if not jobs:
+        st.markdown("""
+        <div class='empty-state'>
+            <div class='empty-state-icon'>📋</div>
+            <div class='empty-state-title'>No jobs to display</div>
+            <div class='empty-state-text'>Once jobs are added you'll see KPIs, charts, and insights here.</div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.stop()
+    
+    # Calculate metrics
+    active_jobs = [j for j in jobs if j.get("status") == "active"]
+    completed_jobs = [j for j in jobs if j.get("status") == "completed"]
+    
+    total_contract = sum(float(j.get("contract_amount", 0) or 0) for j in active_jobs)
+    total_costs = sum(float(j.get("total_costs", 0) or 0) for j in active_jobs)
+    total_profit = sum(float(j.get("profit", 0) or 0) for j in active_jobs)
+    avg_margin = ((total_profit / total_contract * 100) if total_contract > 0 else 0)
+    
+    # Enhanced KPI Section
+    cols = st.columns(5)
+    kpi_data = [
+        ("Active Jobs", f"{len(active_jobs)}", None),
+        ("Completed", f"{len(completed_jobs)}", None),
+        ("Contract Value", f"${total_contract:,.0f}", None),
+        ("Total Costs", f"${total_costs:,.0f}", None),
+        ("Avg Margin", f"{avg_margin:.1f}%", f"{avg_margin:.1f}%" if avg_margin > 0 else None),
+    ]
+    
+    for col, (label, value, delta) in zip(cols, kpi_data):
+        with col:
+            st.metric(label, value, delta=delta)
+    
+    st.write("")
+    st.write("")
+    
+    # Charts Section
+    col1, col2 = st.columns(2, gap="large")
+    
+    with col1:
+        st.markdown('<div class="section-header">Jobs by Status</div>', unsafe_allow_html=True)
+        
+        status_counts = {}
+        for j in jobs:
+            s = j.get("status", "unknown")
+            status_counts[s] = status_counts.get(s, 0) + 1
+        
+        # Enhanced color scheme
+        colors = {
+            'active': '#10b981',
+            'completed': '#3b82f6',
+            'estimate': '#f59e0b',
+            'on_hold': '#8b5cf6',
+            'unknown': '#6b7280'
+        }
+        color_sequence = [colors.get(status, '#6b7280') for status in status_counts.keys()]
+        
+        fig = px.pie(
+            values=list(status_counts.values()),
+            names=[s.replace('_', ' ').title() for s in status_counts.keys()],
+            color_discrete_sequence=color_sequence,
+            hole=0.4
+        )
+        fig.update_traces(
+            textposition='inside',
+            textinfo='percent+label',
+            hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>'
+        )
+        fig.update_layout(
+            showlegend=True,
+            height=350,
+            margin=dict(t=20, b=20, l=20, r=20),
+            font=dict(family="Inter, sans-serif", size=12)
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with col2:
+        st.markdown('<div class="section-header">Budget vs Actual (Top 5)</div>', unsafe_allow_html=True)
+        
+        chart_data = []
+        for j in active_jobs[:5]:
+            chart_data.append({
+                "Job": j.get("job_number", "")[:15],
+                "Budget": float(j.get("total_budget", 0) or 0),
+                "Actual": float(j.get("total_costs", 0) or 0)
+            })
+        
+        if chart_data:
+            df = pd.DataFrame(chart_data)
+            fig = go.Figure(data=[
+                go.Bar(
+                    name="Budget",
+                    x=df["Job"],
+                    y=df["Budget"],
+                    marker_color='#94a3b8',
+                    hovertemplate='<b>%{x}</b><br>Budget: $%{y:,.0f}<extra></extra>'
+                ),
+                go.Bar(
+                    name="Actual",
+                    x=df["Job"],
+                    y=df["Actual"],
+                    marker_color=primary_color,
+                    hovertemplate='<b>%{x}</b><br>Actual: $%{y:,.0f}<extra></extra>'
+                )
+            ])
+            fig.update_layout(
+                barmode="group",
+                height=350,
+                margin=dict(t=20, b=40, l=40, r=20),
+                font=dict(family="Inter, sans-serif", size=12),
+                showlegend=True,
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                xaxis=dict(title=""),
+                yaxis=dict(title="Amount ($)")
+            )
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No budget data available for active jobs")
+    
+    st.write("")
+    
+    # Top Jobs Section
+    st.markdown('<div class="section-header">🔈 Top Jobs by Profit</div>', unsafe_allow_html=True)
+    
+    sorted_jobs = sorted(active_jobs, key=lambda x: float(x.get("profit", 0) or 0), reverse=True)[:5]
+    
+    if sorted_jobs:
+        for job in sorted_jobs:
+            profit = float(job.get("profit", 0) or 0)
+            margin = float(job.get("profit_margin", 0) or 0)
+            contract = float(job.get("contract_amount", 0) or 0)
+            
+            margin_class = 'profit-positive' if margin > 0 else 'profit-negative'
+            
+            st.markdown(f"""
+            <div class='job-table-row'>
+                <div class='job-info'>
+                    <div class='job-number'>{job.get('job_number', 'N/A')}</div>
+                    <div class='job-name'>{job.get('job_name', 'Untitled')[:60]}</div>
+                </div>
+                <div class='job-metric'>
+                    <div class='metric-label'>Contract</div>
+                    <div class='metric-value'>${contract:,.0f}</div>
+                </div>
+                <div class='job-metric'>
+                    <div class='metric-label'>Profit</div>
+                    <div class='metric-value'>${profit:,.0f}</div>
+                </div>
+                <div class='job-metric'>
+                    <div class='metric-label'>Margin</div>
+                    <div class='{margin_class}'>{margin:.1f}%</div>
                 </div>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            """, unsafe_allow_html=True)
+    else:
+        st.info("No active jobs with profit data")
 
-    # Recent Receipts
-    with st.container():
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="card-header">Recent Receipts</div>
-                <div class="card-content">
-                    {len(recent_receipts)} recent receipts
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-with st.container():
-    # Recent Customers
-    with st.container():
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="card-header">Recent Customers</div>
-                <div class="card-content">
-                    {len(recent_customers)} recent customers
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    # Recent Vendors
-    with st.container():
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="card-header">Recent Vendors</div>
-                <div class="card-content">
-                    {len(recent_vendors)} recent vendors
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+except Exception as e:
+    st.error(f"⚠️ Error loading dashboard: {e}")
+    st.write("")
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("🔄 Retry", use_container_width=True):
+            st.rerun()

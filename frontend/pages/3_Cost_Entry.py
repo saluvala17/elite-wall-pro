@@ -1,4 +1,4 @@
-"""Cost Entry Page with Receipt Scanner"""
+"""Cost Entry Page with Receipt Scanner - Enhanced Modern UI"""
 import streamlit as st
 import base64
 from datetime import date, timedelta
@@ -12,10 +12,344 @@ if not st.session_state.get("authenticated"):
 from components.sidebar import render_sidebar
 
 tenant = st.session_state.get("tenant", {})
-branding = tenant.get("branding", {"primary_color": "#4A7C59", "company_name": "Elite Wall Pro"})
+branding = tenant.get("branding", {"primary_color": "#2CA01C", "company_name": "Elite Wall Pro"})
 render_sidebar(branding)
 
-st.title("💰 Weekly Cost Entry")
+# Enhanced Global UI Styling
+primary_color = branding.get("primary_color", "#2CA01C")
+
+st.markdown(
+    f"""
+    <style>
+    /* ===== Global Foundation ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    html, body, [class*="css"] {{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background-color: #f7f9fc;
+        color: #1a1a1a;
+    }}
+
+    .block-container {{
+        padding-top: 2rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+        max-width: 1400px !important;
+    }}
+
+    /* ===== Page Header ===== */
+    .page-header {{
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #e8edf5;
+    }}
+
+    .page-title {{
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }}
+
+    /* ===== Tabs Enhancement ===== */
+    .stTabs [data-baseweb="tab-list"] {{
+        gap: 8px;
+        background-color: #ffffff;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid #e8edf5;
+    }}
+
+    .stTabs [data-baseweb="tab"] {{
+        height: 44px;
+        padding: 0 24px;
+        background-color: transparent;
+        border-radius: 6px;
+        color: #64748b;
+        font-weight: 600;
+        border: none;
+    }}
+
+    .stTabs [aria-selected="true"] {{
+        background-color: {primary_color} !important;
+        color: #ffffff !important;
+    }}
+
+    /* ===== Select Boxes ===== */
+    .stSelectbox > div > div {{
+        border-radius: 8px;
+        border: 1px solid #e8edf5;
+        background: #ffffff;
+    }}
+
+    /* ===== Success Banner ===== */
+    .success-banner {{
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border: 1px solid #86efac;
+        border-left: 4px solid #10b981;
+        padding: 16px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+    }}
+
+    .success-icon {{
+        font-size: 1.5rem;
+    }}
+
+    .success-text {{
+        flex: 1;
+    }}
+
+    .success-title {{
+        font-weight: 600;
+        color: #065f46;
+        margin-bottom: 4px;
+    }}
+
+    .success-details {{
+        font-size: 0.875rem;
+        color: #047857;
+    }}
+
+    /* ===== Form Sections ===== */
+    .form-section {{
+        background: #ffffff;
+        padding: 24px;
+        border-radius: 10px;
+        border: 1px solid #e8edf5;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }}
+
+    .form-section-title {{
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e8edf5;
+    }}
+
+    /* ===== Number Inputs ===== */
+    .stNumberInput > div > div > input {{
+        border-radius: 8px;
+        border: 1px solid #e8edf5;
+        padding: 12px 16px;
+        background: #ffffff;
+    }}
+
+    .stNumberInput > div > div > input:focus {{
+        border-color: {primary_color};
+        box-shadow: 0 0 0 3px {primary_color}20;
+    }}
+
+    /* ===== Text Areas ===== */
+    .stTextArea > div > div > textarea {{
+        border-radius: 8px;
+        border: 1px solid #e8edf5;
+        padding: 12px 16px;
+        background: #ffffff;
+    }}
+
+    /* ===== Buttons ===== */
+    .stButton > button {{
+        border-radius: 8px;
+        height: 44px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }}
+
+    .stButton > button:hover {{
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }}
+
+    .stButton > button[kind="primary"] {{
+        background: {primary_color} !important;
+        border-color: {primary_color} !important;
+    }}
+
+    /* ===== File Uploader ===== */
+    .uploadedFile {{
+        background: #ffffff;
+        border: 1px solid #e8edf5;
+        border-radius: 8px;
+        padding: 12px;
+    }}
+
+    /* ===== Receipt Preview ===== */
+    .receipt-preview {{
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e8edf5;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    }}
+
+    /* ===== Scanned Data Card ===== */
+    .scanned-data-card {{
+        background: #f8fafc;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e8edf5;
+        margin-top: 20px;
+    }}
+
+    .confidence-badge {{
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }}
+
+    .confidence-high {{
+        background: #ecfdf5;
+        color: #059669;
+    }}
+
+    .confidence-medium {{
+        background: #fffbeb;
+        color: #d97706;
+    }}
+
+    /* ===== Line Item Row ===== */
+    .line-item-row {{
+        background: #ffffff;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #e8edf5;
+        margin-bottom: 10px;
+        display: grid;
+        grid-template-columns: 2fr 1.5fr 0.5fr;
+        gap: 16px;
+        align-items: center;
+    }}
+
+    .item-description {{
+        color: #0f172a;
+        font-weight: 500;
+    }}
+
+    .item-amount {{
+        color: #0f172a;
+        font-weight: 600;
+        text-align: right;
+    }}
+
+    /* ===== Category Totals ===== */
+    .category-total {{
+        background: #ffffff;
+        padding: 16px 20px;
+        border-radius: 8px;
+        border: 1px solid #e8edf5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }}
+
+    .category-label {{
+        color: #64748b;
+        font-weight: 500;
+        text-transform: capitalize;
+    }}
+
+    .category-value {{
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }}
+
+    /* ===== Warning Box ===== */
+    .warning-box {{
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-left: 4px solid #f59e0b;
+        padding: 16px 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: start;
+        gap: 12px;
+    }}
+
+    .warning-icon {{
+        font-size: 1.5rem;
+    }}
+
+    .warning-text {{
+        color: #92400e;
+    }}
+
+    /* ===== History Expander ===== */
+    .streamlit-expanderHeader {{
+        background: #ffffff;
+        border: 1px solid #e8edf5;
+        border-radius: 10px;
+        padding: 16px 20px !important;
+        font-weight: 600;
+        color: #0f172a;
+        transition: all 0.2s ease;
+    }}
+
+    .streamlit-expanderHeader:hover {{
+        border-color: {primary_color}40;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }}
+
+    div[data-testid="stExpander"] {{
+        background: transparent;
+        border: none;
+        margin-bottom: 12px;
+    }}
+
+    .streamlit-expanderContent {{
+        background: #f8fafc;
+        border: 1px solid #e8edf5;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        padding: 20px;
+    }}
+
+    /* ===== Info Messages ===== */
+    .stAlert {{
+        border-radius: 10px;
+        border-left-width: 4px;
+    }}
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {{
+        .block-container {{
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }}
+        
+        .line-item-row {{
+            grid-template-columns: 1fr;
+        }}
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Header
+st.markdown("""
+<div class='page-header'>
+    <div class='page-title'>💰 Weekly Cost Entry</div>
+</div>
+""", unsafe_allow_html=True)
 
 api = st.session_state.api_client
 
@@ -34,25 +368,30 @@ def get_week_endings(n=12):
 try:
     jobs = api.get_jobs(status="active")
 except Exception as e:
-    st.error(f"Failed to load jobs: {e}")
+    st.error(f"⚠️ Failed to load jobs: {e}")
     jobs = []
 
 if not jobs:
-    st.info("No active jobs found. Create an active job first.")
+    st.info("ℹ️ No active jobs found. Create an active job first.")
+    if st.button("➕ Create Job", type="primary"):
+        st.switch_page("pages/2_Jobs.py")
     st.stop()
 
-# Job selection
-job_options = {f"{j.get('job_number')} - {j.get('job_name')}": j for j in jobs}
-selected_job_name = st.selectbox("Select Job", list(job_options.keys()))
-selected_job = job_options[selected_job_name]
+# Job & Week Selection
+col1, col2 = st.columns(2)
 
-# Week selection
-week_endings = get_week_endings()
-week_options = [w.strftime('%Y-%m-%d') + f" ({w.strftime('%b %d')})" for w in week_endings]
-selected_week_display = st.selectbox("Week Ending (Saturday)", week_options)
-selected_week = selected_week_display.split(" ")[0]
+with col1:
+    job_options = {f"{j.get('job_number')} - {j.get('job_name')}": j for j in jobs}
+    selected_job_name = st.selectbox("📋 Select Job", list(job_options.keys()))
+    selected_job = job_options[selected_job_name]
 
-st.markdown("---")
+with col2:
+    week_endings = get_week_endings()
+    week_options = [w.strftime('%Y-%m-%d') + f" ({w.strftime('%b %d')})" for w in week_endings]
+    selected_week_display = st.selectbox("📅 Week Ending (Saturday)", week_options)
+    selected_week = selected_week_display.split(" ")[0]
+
+st.write("")
 
 # Tabs
 entry_tab, scanner_tab, history_tab = st.tabs(["✏️ Manual Entry", "📸 Scan Receipt", "📊 History"])
@@ -61,7 +400,7 @@ entry_tab, scanner_tab, history_tab = st.tabs(["✏️ Manual Entry", "📸 Scan
 # MANUAL ENTRY TAB
 # ==========================================
 with entry_tab:
-    st.subheader(f"Enter Costs for Week Ending {selected_week}")
+    st.markdown(f'<div class="form-section-title">Enter Costs for Week Ending {selected_week}</div>', unsafe_allow_html=True)
     
     # Get existing entry
     try:
@@ -73,15 +412,28 @@ with entry_tab:
     # Check if receipt was applied
     applied_totals = st.session_state.get("receipt_category_totals", {})
     if applied_totals:
-        st.success(f"✅ Receipt applied! Total: ${sum(applied_totals.values()):,.2f}")
-        with st.expander("Category Breakdown"):
+        total_applied = sum(applied_totals.values())
+        st.markdown(f"""
+        <div class='success-banner'>
+            <div class='success-icon'>✅</div>
+            <div class='success-text'>
+                <div class='success-title'>Receipt Applied Successfully</div>
+                <div class='success-details'>Total: ${total_applied:,.2f} distributed across categories</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.expander("📋 Category Breakdown", expanded=False):
             for cat, amt in applied_totals.items():
                 if amt > 0:
-                    st.write(f"• {cat.replace('_', ' ').title()}: ${amt:,.2f}")
+                    st.markdown(f"""
+                    <div class='category-total'>
+                        <span class='category-label'>{cat.replace('_', ' ').title()}</span>
+                        <span class='category-value'>${amt:,.2f}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
     
     with st.form("cost_entry"):
-        col1, col2, col3 = st.columns(3)
-        
         base_insurance = float(existing_entry.get("insurance_actual", 0) if existing_entry else 0)
         base_labor = float(existing_entry.get("labor_actual", 0) if existing_entry else 0)
         base_stamps = float(existing_entry.get("stamps_actual", 0) if existing_entry else 0)
@@ -97,23 +449,51 @@ with entry_tab:
         subs_bond = base_subs + applied_totals.get("subs_bond", 0)
         equipment = base_equipment + applied_totals.get("equipment", 0)
         
+        st.markdown("### 💵 Cost Categories")
+        col1, col2, col3 = st.columns(3)
+        
         with col1:
-            insurance = st.number_input("Insurance ($)", min_value=0.0, value=insurance, step=100.0)
-            labor = st.number_input("Labor ($)", min_value=0.0, value=labor, step=100.0)
+            insurance = st.number_input("🛡️ Insurance ($)", min_value=0.0, value=insurance, step=100.0, format="%.2f")
+            labor = st.number_input("👷 Labor ($)", min_value=0.0, value=labor, step=100.0, format="%.2f")
         
         with col2:
-            stamps = st.number_input("Stamps ($)", min_value=0.0, value=stamps, step=100.0)
-            material = st.number_input("Material ($)", min_value=0.0, value=material, step=100.0)
+            stamps = st.number_input("📮 Stamps ($)", min_value=0.0, value=stamps, step=100.0, format="%.2f")
+            material = st.number_input("🧱 Material ($)", min_value=0.0, value=material, step=100.0, format="%.2f")
         
         with col3:
-            subs_bond = st.number_input("Subs & Bond ($)", min_value=0.0, value=subs_bond, step=100.0)
-            equipment = st.number_input("Equipment ($)", min_value=0.0, value=equipment, step=100.0)
+            subs_bond = st.number_input("🤝 Subs & Bond ($)", min_value=0.0, value=subs_bond, step=100.0, format="%.2f")
+            equipment = st.number_input("🚜 Equipment ($)", min_value=0.0, value=equipment, step=100.0, format="%.2f")
         
-        man_days = st.number_input("Man Days", min_value=0, 
-                                   value=int(existing_entry.get("man_days_actual", 0) if existing_entry else 0))
-        notes = st.text_area("Notes", value=existing_entry.get("notes", "") if existing_entry else "")
+        st.write("")
         
-        if st.form_submit_button("💾 Save Costs", use_container_width=True, type="primary"):
+        # Totals
+        total_costs = insurance + labor + stamps + material + subs_bond + equipment
+        st.markdown(f"""
+        <div class='category-total' style='background: #f0fdf4; border-color: #86efac;'>
+            <span class='category-label' style='color: #065f46;'>Total Weekly Costs</span>
+            <span class='category-value' style='color: #065f46;'>${total_costs:,.2f}</span>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.write("")
+        st.markdown("### 📋 Additional Details")
+        
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            man_days = st.number_input("👥 Man Days", min_value=0, 
+                                       value=int(existing_entry.get("man_days_actual", 0) if existing_entry else 0))
+        
+        notes = st.text_area("📝 Notes", value=existing_entry.get("notes", "") if existing_entry else "",
+                            placeholder="Add any relevant notes or comments...", height=100)
+        
+        st.write("")
+        
+        # Submit
+        col1, col2, col3 = st.columns([1, 1, 1])
+        with col2:
+            submit = st.form_submit_button("💾 Save Costs", use_container_width=True, type="primary")
+        
+        if submit:
             cost_data = {
                 "job_id": selected_job["id"],
                 "week_ending": selected_week,
@@ -130,17 +510,17 @@ with entry_tab:
             try:
                 api.save_weekly_cost(cost_data)
                 st.session_state.receipt_category_totals = {}  # Clear
-                st.success("✅ Costs saved!")
+                st.success("✅ Costs saved successfully!")
                 st.rerun()
             except Exception as e:
-                st.error(f"Failed to save: {e}")
+                st.error(f"❌ Failed to save: {e}")
 
 
 # ==========================================
 # RECEIPT SCANNER TAB
 # ==========================================
 with scanner_tab:
-    st.subheader("📸 Scan Receipt")
+    st.markdown('<div class="form-section-title">📸 Scan Receipt</div>', unsafe_allow_html=True)
     
     # Check if scanning is available
     try:
@@ -150,22 +530,34 @@ with scanner_tab:
         scanning_available = False
     
     if not scanning_available:
-        st.warning("⚠️ Receipt scanning requires Anthropic API key configuration on the server.")
+        st.markdown("""
+        <div class='warning-box'>
+            <div class='warning-icon'>⚠️</div>
+            <div class='warning-text'>
+                <strong>Receipt scanning unavailable</strong><br>
+                Anthropic API key configuration required on the server.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    uploaded_file = st.file_uploader(
-        "Upload receipt image",
-        type=["jpg", "jpeg", "png", "gif", "webp", "pdf"]
-    )
+    col1, col2 = st.columns([1, 1])
     
-    if uploaded_file:
-        col1, col2 = st.columns([1, 1])
+    with col1:
+        uploaded_file = st.file_uploader(
+            "📁 Upload receipt image",
+            type=["jpg", "jpeg", "png", "gif", "webp", "pdf"],
+            help="Supported formats: JPG, PNG, GIF, WebP, PDF"
+        )
         
-        with col1:
-            st.image(uploaded_file, width=300)
-        
-        with col2:
-            if st.button("🔍 Scan Receipt", type="primary", disabled=not scanning_available):
-                with st.spinner("Analyzing receipt..."):
+        if uploaded_file:
+            st.image(uploaded_file, caption="Receipt Preview", use_container_width=True)
+    
+    with col2:
+        if uploaded_file:
+            st.write("")
+            st.write("")
+            if st.button("🔍 Scan Receipt", type="primary", disabled=not scanning_available, use_container_width=True):
+                with st.spinner("🔄 Analyzing receipt..."):
                     try:
                         uploaded_file.seek(0)
                         content = uploaded_file.read()
@@ -174,34 +566,45 @@ with scanner_tab:
                         
                         result = api.scan_receipt(data_uri, selected_job.get("job_name", ""))
                         st.session_state.scanned_receipt = result
-                        st.success("✅ Receipt scanned!")
+                        st.success("✅ Receipt scanned successfully!")
+                        st.rerun()
                     except Exception as e:
-                        st.error(f"Scan failed: {e}")
+                        st.error(f"❌ Scan failed: {e}")
     
     # Show scanned results
     if "scanned_receipt" in st.session_state:
         receipt = st.session_state.scanned_receipt
         
         st.markdown("---")
-        st.subheader("📋 Extracted Data")
+        st.markdown('<div class="form-section-title">📋 Extracted Data</div>', unsafe_allow_html=True)
         
+        # Confidence
         confidence = receipt.get("confidence_score", 0)
-        if confidence >= 0.8:
-            st.success(f"High confidence: {confidence:.0%}")
-        else:
-            st.warning(f"Medium confidence: {confidence:.0%} - Please verify")
+        confidence_class = "confidence-high" if confidence >= 0.8 else "confidence-medium"
+        confidence_text = "High Confidence" if confidence >= 0.8 else "Medium Confidence - Please Verify"
         
+        st.markdown(f"""
+        <div class='confidence-badge {confidence_class}'>
+            {confidence_text}: {confidence:.0%}
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.write("")
+        
+        # Receipt Info
         col1, col2 = st.columns(2)
         with col1:
-            st.write(f"**Vendor:** {receipt.get('vendor_name', 'Unknown')}")
-            st.write(f"**Date:** {receipt.get('receipt_date', 'N/A')}")
+            st.markdown(f"**Vendor:** {receipt.get('vendor_name', 'Unknown')}")
+            st.markdown(f"**Date:** {receipt.get('receipt_date', 'N/A')}")
         with col2:
-            st.write(f"**Total:** ${receipt.get('total', 0):,.2f}")
+            st.markdown(f"**Total:** ${receipt.get('total', 0):,.2f}")
+        
+        st.write("")
         
         # Line items with categories
         line_items = receipt.get("line_items", [])
         if line_items:
-            st.markdown("### Line Items")
+            st.markdown("### 📝 Line Items")
             
             categories = ["material", "subs_bond", "labor", "equipment", "insurance", "stamps"]
             category_totals = {cat: 0.0 for cat in categories}
@@ -211,7 +614,7 @@ with scanner_tab:
                 
                 with col1:
                     desc = item.get("description", item.get("vendor_name", "Item"))
-                    st.write(desc[:50])
+                    st.markdown(f'<div class="item-description">{desc[:50]}</div>', unsafe_allow_html=True)
                 
                 with col2:
                     current_cat = item.get("category", "material")
@@ -226,22 +629,30 @@ with scanner_tab:
                 
                 with col3:
                     amt = float(item.get("total", item.get("amount", 0)) or 0)
-                    st.write(f"${amt:,.2f}")
+                    st.markdown(f'<div class="item-amount">${amt:,.2f}</div>', unsafe_allow_html=True)
                     category_totals[new_cat] += amt
             
-            st.markdown("### Category Totals")
-            cols = st.columns(3)
-            for i, (cat, amt) in enumerate(category_totals.items()):
+            st.write("")
+            st.markdown("### 💰 Category Totals")
+            
+            for cat, amt in category_totals.items():
                 if amt > 0:
-                    with cols[i % 3]:
-                        st.metric(cat.replace("_", " ").title(), f"${amt:,.2f}")
+                    st.markdown(f"""
+                    <div class='category-total'>
+                        <span class='category-label'>{cat.replace("_", " ").title()}</span>
+                        <span class='category-value'>${amt:,.2f}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
         
+        st.write("")
+        
+        # Action Buttons
         col1, col2 = st.columns(2)
         with col1:
             if st.button("✅ Apply to Cost Entry", type="primary", use_container_width=True):
                 st.session_state.receipt_category_totals = category_totals
                 del st.session_state.scanned_receipt
-                st.success("Applied! Go to Manual Entry tab to save.")
+                st.success("✅ Applied! Go to Manual Entry tab to save.")
                 st.rerun()
         
         with col2:
@@ -254,25 +665,45 @@ with scanner_tab:
 # HISTORY TAB
 # ==========================================
 with history_tab:
-    st.subheader("📊 Cost History")
+    st.markdown('<div class="form-section-title">📊 Cost History</div>', unsafe_allow_html=True)
     
     try:
         costs = api.get_weekly_costs(selected_job["id"])
         
         if costs:
             for cost in costs[:10]:
-                with st.expander(f"Week: {cost.get('week_ending', 'N/A')}"):
-                    total = sum([
-                        float(cost.get("insurance_actual", 0) or 0),
-                        float(cost.get("labor_actual", 0) or 0),
-                        float(cost.get("stamps_actual", 0) or 0),
-                        float(cost.get("material_actual", 0) or 0),
-                        float(cost.get("subs_bond_actual", 0) or 0),
-                        float(cost.get("equipment_actual", 0) or 0),
-                    ])
-                    st.write(f"**Total:** ${total:,.2f}")
-                    st.write(f"Man Days: {cost.get('man_days_actual', 0)}")
+                week = cost.get('week_ending', 'N/A')
+                total = sum([
+                    float(cost.get("insurance_actual", 0) or 0),
+                    float(cost.get("labor_actual", 0) or 0),
+                    float(cost.get("stamps_actual", 0) or 0),
+                    float(cost.get("material_actual", 0) or 0),
+                    float(cost.get("subs_bond_actual", 0) or 0),
+                    float(cost.get("equipment_actual", 0) or 0),
+                ])
+                
+                with st.expander(f"📅 Week: {week} - Total: ${total:,.2f}"):
+                    col1, col2, col3 = st.columns(3)
+                    
+                    with col1:
+                        st.markdown(f"**Insurance:** ${float(cost.get('insurance_actual', 0) or 0):,.2f}")
+                        st.markdown(f"**Labor:** ${float(cost.get('labor_actual', 0) or 0):,.2f}")
+                    
+                    with col2:
+                        st.markdown(f"**Stamps:** ${float(cost.get('stamps_actual', 0) or 0):,.2f}")
+                        st.markdown(f"**Material:** ${float(cost.get('material_actual', 0) or 0):,.2f}")
+                    
+                    with col3:
+                        st.markdown(f"**Subs & Bond:** ${float(cost.get('subs_bond_actual', 0) or 0):,.2f}")
+                        st.markdown(f"**Equipment:** ${float(cost.get('equipment_actual', 0) or 0):,.2f}")
+                    
+                    st.write("")
+                    st.markdown(f"**Man Days:** {cost.get('man_days_actual', 0)}")
+                    
+                    if cost.get('notes'):
+                        st.markdown(f"**Notes:** {cost.get('notes')}")
         else:
-            st.info("No cost entries yet")
+            st.info("📭 No cost entries yet for this job")
+    
     except Exception as e:
-        st.error(f"Error loading history: {e}")
+        st.error(f"⚠️ Error loading history: {e}")
