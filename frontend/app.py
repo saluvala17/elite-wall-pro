@@ -111,13 +111,13 @@ def apply_global_css(primary_color: str):
             padding-top: 1.5rem;
         }}
 
-        /* Sidebar Logo - Top Left */
+        /* Sidebar Logo - Top Left Corner */
         .sidebar-logo {{
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 16px 16px;
-            margin: 0 0 0 0;
+            padding: 20px 12px 16px 12px;
+            margin: 0;
         }}
 
         .sidebar-logo-icon {{
@@ -135,7 +135,7 @@ def apply_global_css(primary_color: str):
 
         .sidebar-logo-text {{
             color: #ffffff;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 800;
             letter-spacing: -0.02em;
         }}
@@ -165,12 +165,29 @@ def apply_global_css(primary_color: str):
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }}
 
+        /* White arrow/chevron for navigation buttons */
+        [data-testid="stSidebar"] .stButton > button::after {{
+            content: '';
+            margin-left: auto;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 6px solid rgba(255, 255, 255, 0.6);
+            transition: all 0.2s ease;
+        }}
+
         [data-testid="stSidebar"] .stButton > button:hover {{
             background: rgba(255, 255, 255, 0.18);
             color: #ffffff;
             border-color: rgba(255, 255, 255, 0.25);
             transform: translateX(3px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }}
+
+        [data-testid="stSidebar"] .stButton > button:hover::after {{
+            border-left-color: rgba(255, 255, 255, 1);
+            transform: translateX(2px);
         }}
 
         [data-testid="stSidebar"] .stButton > button:active {{
@@ -192,6 +209,10 @@ def apply_global_css(primary_color: str):
             border-color: rgba(239, 68, 68, 0.3);
             color: #FCA5A5;
             font-weight: 700;
+        }}
+
+        .logout-section .stButton > button::after {{
+            display: none;
         }}
 
         .logout-section .stButton > button:hover {{
@@ -531,7 +552,7 @@ def render_enhanced_sidebar(branding):
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown('<div style="margin: 28px 0;"></div>', unsafe_allow_html=True)
+        st.markdown('<div style="margin: 24px 0;"></div>', unsafe_allow_html=True)
         
         # Unified Navigation Menu (No Section Headers)
         if st.button("🏠  Dashboard", key="nav_home", use_container_width=True):
