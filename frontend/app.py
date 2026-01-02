@@ -111,57 +111,38 @@ def apply_global_css(primary_color: str):
             padding-top: 1.5rem;
         }}
 
-        /* Sidebar Company Header */
-        .sidebar-header {{
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px 16px;
-            margin: 0 16px 20px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-        }}
-
-        .sidebar-company-name {{
-            color: #ffffff;
-            font-size: 1.25rem;
-            font-weight: 800;
+        /* Sidebar Logo - Top Left */
+        .sidebar-logo {{
             display: flex;
             align-items: center;
             gap: 12px;
-            letter-spacing: -0.02em;
+            padding: 16px 16px;
+            margin: 0 0 0 0;
         }}
 
-        .sidebar-company-icon {{
+        .sidebar-logo-icon {{
             background: rgba(255, 255, 255, 0.2);
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             flex-shrink: 0;
             border: 2px solid rgba(255, 255, 255, 0.3);
         }}
 
-        /* Sidebar Navigation Section */
-        .sidebar-nav-section {{
-            margin: 0 12px 24px 12px;
+        .sidebar-logo-text {{
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }}
 
-        .sidebar-nav-title {{
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            padding: 8px 12px 8px 12px;
-            margin-bottom: 6px;
-        }}
-
-        /* Override Streamlit's button styling in sidebar - BOLD & CLEAR */
+        /* Override Streamlit's button styling in sidebar - Unified Menu */
         [data-testid="stSidebar"] .stButton {{
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }}
 
         [data-testid="stSidebar"] .stButton > button {{
@@ -534,28 +515,25 @@ def apply_global_css(primary_color: str):
 
 
 # --------------------------------------------------
-# Enhanced Sidebar (Purple Theme with Bold Text)
+# Enhanced Sidebar (Purple Theme - Professional SaaS Style)
 # --------------------------------------------------
 def render_enhanced_sidebar(branding):
-    """Render purple-themed sidebar with bold, clear navigation"""
+    """Render purple-themed sidebar with clean, unified navigation"""
     
     with st.sidebar:
-        # Company Header (Simplified - No User Info)
+        # Company Logo - Top Left
         company_name = branding.get("company_name", "Elite Wall Pro")
         
         st.markdown(f"""
-        <div class="sidebar-header">
-            <div class="sidebar-company-name">
-                <div class="sidebar-company-icon">🏗️</div>
-                <span>{company_name}</span>
-            </div>
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">🏗️</div>
+            <span class="sidebar-logo-text">{company_name}</span>
         </div>
         """, unsafe_allow_html=True)
         
-        # Main Navigation - Pulled to Top
-        st.markdown('<div class="sidebar-nav-title">MAIN MENU</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sidebar-nav-section">', unsafe_allow_html=True)
+        st.markdown('<div style="margin: 28px 0;"></div>', unsafe_allow_html=True)
         
+        # Unified Navigation Menu (No Section Headers)
         if st.button("🏠  Dashboard", key="nav_home", use_container_width=True):
             st.switch_page("app.py")
         
@@ -564,15 +542,6 @@ def render_enhanced_sidebar(branding):
         
         if st.button("📋  Jobs", key="nav_jobs", use_container_width=True):
             st.switch_page("pages/2_Jobs.py")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Divider
-        st.markdown('<hr>', unsafe_allow_html=True)
-        
-        # Transactions Section
-        st.markdown('<div class="sidebar-nav-title">TRANSACTIONS</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sidebar-nav-section">', unsafe_allow_html=True)
         
         if st.button("💰  Cost Entry", key="trans_cost", use_container_width=True):
             st.switch_page("pages/3_Cost_Entry.py")
@@ -583,19 +552,8 @@ def render_enhanced_sidebar(branding):
         if st.button("🏢  Vendors", key="trans_vendors", use_container_width=True):
             st.switch_page("pages/5_Vendors.py")
         
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Divider
-        st.markdown('<hr>', unsafe_allow_html=True)
-        
-        # Reports Section
-        st.markdown('<div class="sidebar-nav-title">REPORTS</div>', unsafe_allow_html=True)
-        st.markdown('<div class="sidebar-nav-section">', unsafe_allow_html=True)
-        
         if st.button("📈  Reports", key="nav_reports", use_container_width=True):
             st.switch_page("pages/6_Reports.py")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
         
         # Spacer
         st.markdown('<div style="flex-grow: 1; min-height: 50px;"></div>', unsafe_allow_html=True)
