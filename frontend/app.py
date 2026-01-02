@@ -1,6 +1,6 @@
 """
 Elite Wall Pro - Streamlit Frontend
-Professional QuickBooks-Style UI with Enhanced Modern Design
+Professional QuickBooks-Style UI with Enhanced Modern Design & Sidebar
 """
 
 import streamlit as st
@@ -97,6 +97,160 @@ def apply_global_css(primary_color: str):
             padding-left: 3rem !important;
             padding-right: 3rem !important;
             max-width: 1400px !important;
+        }}
+
+        /* ===== Enhanced Sidebar Styling (QuickBooks Style) ===== */
+        [data-testid="stSidebar"] {{
+            background: linear-gradient(180deg, #1e3a2e 0%, #163025 100%);
+            border-right: none;
+            box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
+        }}
+
+        [data-testid="stSidebar"] > div:first-child {{
+            background: transparent;
+        }}
+
+        /* Sidebar Company Header */
+        .sidebar-header {{
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px 16px;
+            margin: 0 0 24px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }}
+
+        .sidebar-company-name {{
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }}
+
+        .sidebar-company-icon {{
+            background: {primary_color};
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }}
+
+        .sidebar-user-info {{
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+        }}
+
+        .sidebar-user-name {{
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }}
+
+        .sidebar-user-role {{
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            text-transform: capitalize;
+        }}
+
+        /* Sidebar Navigation Section */
+        .sidebar-nav-section {{
+            margin-bottom: 24px;
+        }}
+
+        .sidebar-nav-title {{
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0 16px 8px 16px;
+            margin-bottom: 4px;
+        }}
+
+        /* Sidebar Navigation Items */
+        .sidebar-nav-item {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 4px 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }}
+
+        .sidebar-nav-item:hover {{
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            transform: translateX(2px);
+        }}
+
+        .sidebar-nav-item.active {{
+            background: {primary_color};
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(44, 160, 28, 0.3);
+        }}
+
+        .sidebar-nav-icon {{
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }}
+
+        /* Hide default Streamlit sidebar elements */
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {{
+            color: rgba(255, 255, 255, 0.85);
+        }}
+
+        [data-testid="stSidebar"] hr {{
+            margin: 16px 8px;
+            border-color: rgba(255, 255, 255, 0.1);
+        }}
+
+        /* Sidebar Footer */
+        .sidebar-footer {{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }}
+
+        .sidebar-footer-button {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.85);
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }}
+
+        .sidebar-footer-button:hover {{
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
         }}
 
         /* ===== Typography ===== */
@@ -339,17 +493,6 @@ def apply_global_css(primary_color: str):
             margin-bottom: 4px;
         }}
 
-        /* ===== Sidebar Enhancements ===== */
-        [data-testid="stSidebar"] {{
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border-right: 1px solid #e8edf5;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.02);
-        }}
-
-        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {{
-            padding: 0.5rem 0;
-        }}
-
         /* ===== Info Messages ===== */
         .stAlert {{
             border-radius: 10px;
@@ -412,6 +555,94 @@ def apply_global_css(primary_color: str):
 
 
 # --------------------------------------------------
+# Enhanced Sidebar (QuickBooks Style)
+# --------------------------------------------------
+def render_enhanced_sidebar(branding):
+    """Render QuickBooks-style sidebar navigation"""
+    
+    with st.sidebar:
+        # Company Header
+        company_name = branding.get("company_name", "Elite Wall Pro")
+        user = st.session_state.get("user", {})
+        user_name = user.get("name", "User")
+        user_role = user.get("role", "employee")
+        
+        st.markdown(f"""
+        <div class="sidebar-header">
+            <div class="sidebar-company-name">
+                <div class="sidebar-company-icon">🏗️</div>
+                <span>{company_name}</span>
+            </div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">{user_name}</div>
+                <div class="sidebar-user-role">{user_role}</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Main Navigation
+        st.markdown('<div class="sidebar-nav-title">Main Menu</div>', unsafe_allow_html=True)
+        
+        # Get current page
+        current_page = st.session_state.get("current_page", "Home")
+        
+        # Navigation items
+        nav_items = [
+            {"icon": "🏠", "label": "Home", "page": "app.py"},
+            {"icon": "📊", "label": "Dashboard", "page": "pages/1_Dashboard.py"},
+            {"icon": "📋", "label": "Jobs", "page": "pages/2_Jobs.py"},
+        ]
+        
+        for item in nav_items:
+            active_class = "active" if current_page == item["label"] else ""
+            if st.button(
+                f"{item['icon']}  {item['label']}",
+                key=f"nav_{item['label']}",
+                use_container_width=True
+            ):
+                st.session_state.current_page = item["label"]
+                st.switch_page(item["page"])
+        
+        st.markdown('<div style="margin: 16px 0;"><hr style="border-color: rgba(255, 255, 255, 0.1);"></div>', unsafe_allow_html=True)
+        
+        # Transactions Section
+        st.markdown('<div class="sidebar-nav-title">Transactions</div>', unsafe_allow_html=True)
+        
+        transaction_items = [
+            {"icon": "💰", "label": "Cost Entry", "page": "pages/3_Cost_Entry.py"},
+            {"icon": "👥", "label": "Customers", "page": "pages/4_Customers.py"},
+            {"icon": "🏢", "label": "Vendors", "page": "pages/5_Vendors.py"},
+        ]
+        
+        for item in transaction_items:
+            if st.button(
+                f"{item['icon']}  {item['label']}",
+                key=f"trans_{item['label']}",
+                use_container_width=True
+            ):
+                st.session_state.current_page = item["label"]
+                st.switch_page(item["page"])
+        
+        st.markdown('<div style="margin: 16px 0;"><hr style="border-color: rgba(255, 255, 255, 0.1);"></div>', unsafe_allow_html=True)
+        
+        # Reports Section
+        st.markdown('<div class="sidebar-nav-title">Reports</div>', unsafe_allow_html=True)
+        
+        if st.button("📈  Reports", key="nav_reports", use_container_width=True):
+            st.session_state.current_page = "Reports"
+            st.switch_page("pages/6_Reports.py")
+        
+        # Logout at bottom
+        st.markdown('<div style="margin-top: 40px;"></div>', unsafe_allow_html=True)
+        
+        if st.button("🚪  Logout", key="logout_btn", use_container_width=True):
+            st.session_state.authenticated = False
+            st.session_state.user = None
+            st.session_state.tenant = None
+            st.rerun()
+
+
+# --------------------------------------------------
 # Main Application
 # --------------------------------------------------
 def main():
@@ -424,8 +655,8 @@ def main():
     branding = get_branding()
     apply_global_css(branding["primary_color"])
 
-    # Sidebar (UNCHANGED FUNCTIONALLY)
-    render_sidebar(branding)
+    # Enhanced Sidebar
+    render_enhanced_sidebar(branding)
 
     # --------------------------------------------------
     # Enhanced Header Section
