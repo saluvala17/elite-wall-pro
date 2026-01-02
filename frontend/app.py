@@ -1,6 +1,6 @@
 """
 Elite Wall Pro - Streamlit Frontend
-Professional QuickBooks-Style UI with Enhanced Modern Design & Sidebar
+Professional QuickBooks-Style UI with Contractor-Friendly Sidebar
 """
 
 import streamlit as st
@@ -108,14 +108,16 @@ def apply_global_css(primary_color: str):
 
         [data-testid="stSidebar"] > div:first-child {{
             background: transparent;
+            padding-top: 2rem;
         }}
 
         /* Sidebar Company Header */
         .sidebar-header {{
             background: rgba(255, 255, 255, 0.08);
             padding: 20px 16px;
-            margin: 0 0 24px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 0 16px 24px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }}
 
         .sidebar-company-name {{
@@ -125,14 +127,14 @@ def apply_global_css(primary_color: str):
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 6px;
+            margin-bottom: 12px;
         }}
 
         .sidebar-company-icon {{
             background: {primary_color};
             width: 36px;
             height: 36px;
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,75 +143,96 @@ def apply_global_css(primary_color: str):
         }}
 
         .sidebar-user-info {{
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.875rem;
-            margin-top: 8px;
-            padding: 8px 12px;
             background: rgba(255, 255, 255, 0.05);
+            padding: 10px 12px;
             border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }}
 
         .sidebar-user-name {{
             color: #ffffff;
             font-weight: 600;
-            margin-bottom: 2px;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
         }}
 
         .sidebar-user-role {{
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.65);
             font-size: 0.8rem;
             text-transform: capitalize;
         }}
 
         /* Sidebar Navigation Section */
         .sidebar-nav-section {{
-            margin-bottom: 24px;
+            margin: 0 8px 20px 8px;
         }}
 
         .sidebar-nav-title {{
             color: rgba(255, 255, 255, 0.5);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            padding: 0 16px 8px 16px;
+            padding: 8px 12px 8px 12px;
             margin-bottom: 4px;
         }}
 
-        /* Sidebar Navigation Items */
-        .sidebar-nav-item {{
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
+        /* Override Streamlit's button styling in sidebar */
+        [data-testid="stSidebar"] .stButton {{
+            margin-bottom: 4px;
+        }}
+
+        [data-testid="stSidebar"] .stButton > button {{
+            width: 100%;
+            background: transparent;
+            border: 1px solid transparent;
             color: rgba(255, 255, 255, 0.85);
-            text-decoration: none;
+            text-align: left;
+            padding: 12px 16px;
             border-radius: 8px;
-            margin: 4px 8px;
-            transition: all 0.2s ease;
-            cursor: pointer;
             font-size: 0.95rem;
             font-weight: 500;
+            transition: all 0.2s ease;
+            height: auto;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
         }}
 
-        .sidebar-nav-item:hover {{
+        [data-testid="stSidebar"] .stButton > button:hover {{
             background: rgba(255, 255, 255, 0.12);
             color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.1);
             transform: translateX(2px);
+            box-shadow: none;
         }}
 
-        .sidebar-nav-item.active {{
+        [data-testid="stSidebar"] .stButton > button:active {{
             background: {primary_color};
             color: #ffffff;
-            font-weight: 600;
+            border-color: {primary_color};
             box-shadow: 0 2px 8px rgba(44, 160, 28, 0.3);
         }}
 
-        .sidebar-nav-icon {{
-            width: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-            flex-shrink: 0;
+        /* Logout button special styling */
+        .logout-section {{
+            margin-top: auto;
+            padding: 16px 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }}
+
+        .logout-section .stButton > button {{
+            background: rgba(220, 38, 38, 0.15);
+            border-color: rgba(220, 38, 38, 0.3);
+            color: #fca5a5;
+        }}
+
+        .logout-section .stButton > button:hover {{
+            background: rgba(220, 38, 38, 0.25);
+            border-color: rgba(220, 38, 38, 0.5);
+            color: #ffffff;
         }}
 
         /* Hide default Streamlit sidebar elements */
@@ -220,37 +243,7 @@ def apply_global_css(primary_color: str):
         [data-testid="stSidebar"] hr {{
             margin: 16px 8px;
             border-color: rgba(255, 255, 255, 0.1);
-        }}
-
-        /* Sidebar Footer */
-        .sidebar-footer {{
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }}
-
-        .sidebar-footer-button {{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            color: rgba(255, 255, 255, 0.85);
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-        }}
-
-        .sidebar-footer-button:hover {{
-            background: rgba(255, 255, 255, 0.12);
-            color: #ffffff;
+            opacity: 0.5;
         }}
 
         /* ===== Typography ===== */
@@ -555,17 +548,17 @@ def apply_global_css(primary_color: str):
 
 
 # --------------------------------------------------
-# Enhanced Sidebar (QuickBooks Style)
+# Enhanced Sidebar (Contractor-Friendly QuickBooks Style)
 # --------------------------------------------------
 def render_enhanced_sidebar(branding):
-    """Render QuickBooks-style sidebar navigation"""
+    """Render contractor-friendly QuickBooks-style sidebar navigation"""
     
     with st.sidebar:
         # Company Header
         company_name = branding.get("company_name", "Elite Wall Pro")
         user = st.session_state.get("user", {})
-        user_name = user.get("name", "User")
-        user_role = user.get("role", "employee")
+        user_name = user.get("name", "Admin User")
+        user_role = user.get("role", "admin")
         
         st.markdown(f"""
         <div class="sidebar-header">
@@ -581,65 +574,61 @@ def render_enhanced_sidebar(branding):
         """, unsafe_allow_html=True)
         
         # Main Navigation
-        st.markdown('<div class="sidebar-nav-title">Main Menu</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-nav-title">MAIN MENU</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-nav-section">', unsafe_allow_html=True)
         
-        # Get current page
-        current_page = st.session_state.get("current_page", "Home")
+        if st.button("🏠  Home", key="nav_home", use_container_width=True):
+            st.switch_page("app.py")
         
-        # Navigation items
-        nav_items = [
-            {"icon": "🏠", "label": "Home", "page": "app.py"},
-            {"icon": "📊", "label": "Dashboard", "page": "pages/1_Dashboard.py"},
-            {"icon": "📋", "label": "Jobs", "page": "pages/2_Jobs.py"},
-        ]
+        if st.button("📊  Dashboard", key="nav_dashboard", use_container_width=True):
+            st.switch_page("pages/1_Dashboard.py")
         
-        for item in nav_items:
-            active_class = "active" if current_page == item["label"] else ""
-            if st.button(
-                f"{item['icon']}  {item['label']}",
-                key=f"nav_{item['label']}",
-                use_container_width=True
-            ):
-                st.session_state.current_page = item["label"]
-                st.switch_page(item["page"])
+        if st.button("📋  Jobs", key="nav_jobs", use_container_width=True):
+            st.switch_page("pages/2_Jobs.py")
         
-        st.markdown('<div style="margin: 16px 0;"><hr style="border-color: rgba(255, 255, 255, 0.1);"></div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Divider
+        st.markdown('<hr style="margin: 20px 8px; border-color: rgba(255, 255, 255, 0.1);">', unsafe_allow_html=True)
         
         # Transactions Section
-        st.markdown('<div class="sidebar-nav-title">Transactions</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-nav-title">TRANSACTIONS</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-nav-section">', unsafe_allow_html=True)
         
-        transaction_items = [
-            {"icon": "💰", "label": "Cost Entry", "page": "pages/3_Cost_Entry.py"},
-            {"icon": "👥", "label": "Customers", "page": "pages/4_Customers.py"},
-            {"icon": "🏢", "label": "Vendors", "page": "pages/5_Vendors.py"},
-        ]
+        if st.button("💰  Cost Entry", key="trans_cost", use_container_width=True):
+            st.switch_page("pages/3_Cost_Entry.py")
         
-        for item in transaction_items:
-            if st.button(
-                f"{item['icon']}  {item['label']}",
-                key=f"trans_{item['label']}",
-                use_container_width=True
-            ):
-                st.session_state.current_page = item["label"]
-                st.switch_page(item["page"])
+        if st.button("👥  Customers", key="trans_customers", use_container_width=True):
+            st.switch_page("pages/4_Customers.py")
         
-        st.markdown('<div style="margin: 16px 0;"><hr style="border-color: rgba(255, 255, 255, 0.1);"></div>', unsafe_allow_html=True)
+        if st.button("🏢  Vendors", key="trans_vendors", use_container_width=True):
+            st.switch_page("pages/5_Vendors.py")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Divider
+        st.markdown('<hr style="margin: 20px 8px; border-color: rgba(255, 255, 255, 0.1);">', unsafe_allow_html=True)
         
         # Reports Section
-        st.markdown('<div class="sidebar-nav-title">Reports</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-nav-title">REPORTS</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-nav-section">', unsafe_allow_html=True)
         
         if st.button("📈  Reports", key="nav_reports", use_container_width=True):
-            st.session_state.current_page = "Reports"
             st.switch_page("pages/6_Reports.py")
         
-        # Logout at bottom
-        st.markdown('<div style="margin-top: 40px;"></div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         
+        # Spacer for bottom logout
+        st.markdown('<div style="flex-grow: 1; min-height: 40px;"></div>', unsafe_allow_html=True)
+        
+        # Logout Section
+        st.markdown('<div class="logout-section">', unsafe_allow_html=True)
         if st.button("🚪  Logout", key="logout_btn", use_container_width=True):
             st.session_state.authenticated = False
             st.session_state.user = None
             st.session_state.tenant = None
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 # --------------------------------------------------
