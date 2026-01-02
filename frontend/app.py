@@ -115,7 +115,7 @@ def apply_global_css(primary_color: str):
         .sidebar-header {{
             background: rgba(255, 255, 255, 0.1);
             padding: 20px 16px;
-            margin: 0 16px 32px 16px;
+            margin: 0 16px 20px 16px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -128,7 +128,6 @@ def apply_global_css(primary_color: str):
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 12px;
             letter-spacing: -0.02em;
         }}
 
@@ -143,28 +142,6 @@ def apply_global_css(primary_color: str):
             font-size: 1.3rem;
             flex-shrink: 0;
             border: 2px solid rgba(255, 255, 255, 0.3);
-        }}
-
-        .sidebar-user-info {{
-            background: rgba(255, 255, 255, 0.08);
-            padding: 12px 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }}
-
-        .sidebar-user-name {{
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-        }}
-
-        .sidebar-user-role {{
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 0.05em;
         }}
 
         /* Sidebar Navigation Section */
@@ -220,20 +197,6 @@ def apply_global_css(primary_color: str):
             color: #ffffff;
             border-color: rgba(255, 255, 255, 0.35);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }}
-
-        /* Add New Project Button Special Style */
-        .new-project-btn .stButton > button {{
-            background: rgba(255, 255, 255, 0.95);
-            color: #7C3AED;
-            font-weight: 800;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }}
-
-        .new-project-btn .stButton > button:hover {{
-            background: #ffffff;
-            color: #6D28D9;
-            transform: translateY(-2px);
         }}
 
         /* Logout button special styling */
@@ -577,11 +540,8 @@ def render_enhanced_sidebar(branding):
     """Render purple-themed sidebar with bold, clear navigation"""
     
     with st.sidebar:
-        # Company Header
+        # Company Header (Simplified - No User Info)
         company_name = branding.get("company_name", "Elite Wall Pro")
-        user = st.session_state.get("user", {})
-        user_name = user.get("name", "Admin User")
-        user_role = user.get("role", "admin")
         
         st.markdown(f"""
         <div class="sidebar-header">
@@ -589,22 +549,10 @@ def render_enhanced_sidebar(branding):
                 <div class="sidebar-company-icon">🏗️</div>
                 <span>{company_name}</span>
             </div>
-            <div class="sidebar-user-info">
-                <div class="sidebar-user-name">{user_name}</div>
-                <div class="sidebar-user-role">{user_role}</div>
-            </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # New Project Button
-        st.markdown('<div class="new-project-btn">', unsafe_allow_html=True)
-        if st.button("➕  New Project", key="new_project", use_container_width=True):
-            st.switch_page("pages/2_Jobs.py")
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        st.markdown('<div style="margin: 24px 0;"></div>', unsafe_allow_html=True)
-        
-        # Main Navigation
+        # Main Navigation - Pulled to Top
         st.markdown('<div class="sidebar-nav-title">MAIN MENU</div>', unsafe_allow_html=True)
         st.markdown('<div class="sidebar-nav-section">', unsafe_allow_html=True)
         
