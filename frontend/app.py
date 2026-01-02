@@ -108,7 +108,7 @@ def apply_global_css(primary_color: str):
 
         [data-testid="stSidebar"] > div:first-child {{
             background: transparent;
-            padding-top: 0.5rem;
+            padding-top: 0.1rem;
         }}
 
         /* Sidebar Logo - Absolute Top Corner (Like Fasto) */
@@ -239,7 +239,7 @@ def apply_global_css(primary_color: str):
             font-size: 2.25rem;
             font-weight: 800;
             color: #5B21B6;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.1rem;
             letter-spacing: -0.03em;
             line-height: 1.2;
         }}
