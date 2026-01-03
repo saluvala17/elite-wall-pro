@@ -1,22 +1,122 @@
-"""Reports Page"""
+"""Reports Page - Professional SaaS Colors"""
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+import sys
+from pathlib import Path
+
+# Add components to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 st.set_page_config(page_title="Reports | Elite Wall Pro", page_icon="📈", layout="wide")
+
+# CRITICAL: Hide Streamlit defaults FIRST
+st.markdown(
+    """
+    <style>
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
+        header { visibility: hidden !important; }
+        [data-testid="stSidebarNav"] { display: none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
+# Import shared styles and sidebar
+from components.shared_styles import get_professional_css
 from components.sidebar import render_sidebar
 
+# Get branding
 tenant = st.session_state.get("tenant", {})
-branding = tenant.get("branding", {"primary_color": "#4A7C59", "company_name": "Elite Wall Pro"})
+branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
+primary_color = branding.get("primary_color", "#6366F1")
+
+# CRITICAL: Apply CSS BEFORE rendering sidebar
+st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
+
+# Additional Reports page-specific CSS
+st.markdown(
+    f"""
+    <style>
+    /* ===== Select Boxes ===== */
+    .stSelectbox > div > div {{
+        border-radius: 8px;
+        border: 1px solid var(--gray-200);
+    }}
+
+    /* ===== Report Card ===== */
+    .report-card {{
+        background: #ffffff;
+        padding: 24px;
+        border-radius: 10px;
+        border: 1px solid var(--gray-200);
+        margin-bottom: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }}
+
+    /* ===== Subheaders ===== */
+    h3 {{
+        color: var(--gray-900) !important;
+        font-weight: 700 !important;
+        margin-bottom: 1.5rem !important;
+    }}
+
+    /* ===== Data Tables ===== */
+    [data-testid="stDataFrame"] {{
+        border-radius: 8px;
+        border: 1px solid var(--gray-200);
+        overflow: hidden;
+    }}
+
+    /* ===== Download Button ===== */
+    .stDownloadButton > button {{
+        border-radius: 8px;
+        height: 44px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }}
+
+    /* ===== Empty State ===== */
+    .empty-state {{
+        text-align: center;
+        padding: 60px 30px;
+        background: #ffffff;
+        border-radius: 12px;
+        border: 2px dashed var(--gray-300);
+    }}
+
+    .empty-state-icon {{
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }}
+
+    .empty-state-title {{
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.5rem;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# NOW render sidebar (after all CSS is loaded)
 render_sidebar(branding)
 
-st.title("📈 Reports")
+# Header
+st.markdown("""
+<div class='page-header'>
+    <div class='page-title'>📈 Reports</div>
+</div>
+""", unsafe_allow_html=True)
 
 api = st.session_state.api_client
 
@@ -72,10 +172,15 @@ try:
             
             df = pd.DataFrame(chart_data)
             fig = go.Figure(data=[
-                go.Bar(name="Budget", x=df["Job"], y=df["Budget"], marker_color="#4A7C59"),
-                go.Bar(name="Actual", x=df["Job"], y=df["Actual"], marker_color="#8B4513")
+                go.Bar(name="Budget", x=df["Job"], y=df["Budget"], marker_color='#CBD5E1'),
+                go.Bar(name="Actual", x=df["Job"], y=df["Actual"], marker_color=primary_color)
             ])
-            fig.update_layout(barmode="group", title="Budget vs Actual (Top 10 Active Jobs)")
+            fig.update_layout(
+                barmode="group", 
+                title="Budget vs Actual (Top 10 Active Jobs)",
+                font=dict(family="Inter, sans-serif", size=12),
+                height=400
+            )
             st.plotly_chart(fig, use_container_width=True)
     
     elif report_type == "Cost Category Breakdown":
@@ -94,7 +199,25 @@ try:
                 keys = ["insurance", "labor", "stamps", "material", "subs_bond", "equipment"]
                 values = [float(actual.get(k, 0) or 0) for k in keys]
                 
-                fig = px.pie(values=values, names=categories, title=f"Cost Breakdown: {job.get('job_name', '')}")
+                # Professional color scheme
+                colors = ['#10B981', '#6366F1', '#F59E0B', '#8B5CF6', '#EC4899', '#14B8A6']
+                
+                fig = px.pie(
+                    values=values, 
+                    names=categories, 
+                    title=f"Cost Breakdown: {job.get('job_name', '')}",
+                    color_discrete_sequence=colors,
+                    hole=0.4
+                )
+                fig.update_traces(
+                    textposition='inside',
+                    textinfo='percent+label',
+                    hovertemplate='<b>%{label}</b><br>Amount: $%{value:,.0f}<br>Percentage: %{percent}<extra></extra>'
+                )
+                fig.update_layout(
+                    font=dict(family="Inter, sans-serif", size=12),
+                    height=400
+                )
                 st.plotly_chart(fig, use_container_width=True)
                 
                 # Table
@@ -111,7 +234,12 @@ try:
             except Exception as e:
                 st.error(f"Error loading costs: {e}")
         else:
-            st.info("No active jobs")
+            st.markdown("""
+            <div class='empty-state'>
+                <div class='empty-state-icon'>📊</div>
+                <div class='empty-state-title'>No active jobs</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 except Exception as e:
     st.error(f"Error loading report: {e}")
