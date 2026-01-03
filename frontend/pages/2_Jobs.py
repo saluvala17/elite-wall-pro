@@ -34,6 +34,11 @@ st.markdown(
         --success: #10B981;
         --success-light: #D1FAE5;
         --danger: #EF4444;
+        
+        /* Sidebar Colors */
+        --sidebar-bg-start: #1E293B;
+        --sidebar-bg-mid: #334155;
+        --sidebar-bg-end: #475569;
     }}
     
     /* ===== Global Foundation ===== */
@@ -52,6 +57,177 @@ st.markdown(
         padding-right: 3rem !important;
         max-width: 1400px !important;
     }}
+
+    /* ===== SIDEBAR STYLING (Critical for alignment with app.py) ===== */
+    [data-testid="stSidebar"] {{
+        background: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-mid) 50%, var(--sidebar-bg-end) 100%);
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+    }}
+
+    [data-testid="stSidebar"] > div:first-child {{
+        background: transparent;
+        padding-top: 0.5rem;
+    }}
+
+    /* Sidebar Logo */
+    .sidebar-logo {{
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 16px 12px 16px;
+        margin: 0;
+    }}
+
+    .sidebar-logo-icon {{
+        background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }}
+
+    .sidebar-logo-text {{
+        color: #ffffff;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }}
+
+    /* Sidebar User Pill */
+    .ewp-user-pill {{
+        background: rgba(255, 255, 255, 0.08);
+        padding: 12px 14px;
+        border-radius: 10px;
+        margin: 0 12px 20px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }}
+
+    .ewp-user-avatar {{
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+    }}
+
+    .ewp-user-name {{
+        font-weight: 700;
+        color: #ffffff;
+        font-size: 0.95rem;
+        margin-bottom: 2px;
+    }}
+
+    .ewp-user-role {{
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+    }}
+
+    /* Sidebar Navigation Buttons */
+    [data-testid="stSidebar"] .stButton {{
+        margin-bottom: 6px;
+    }}
+
+    [data-testid="stSidebar"] .stButton > button {{
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.9);
+        text-align: left;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        height: auto;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+    }}
+
+    [data-testid="stSidebar"] .stButton > button::after {{
+        content: '';
+        margin-left: auto;
+        width: 0;
+        height: 0;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-left: 5px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.2s ease;
+    }}
+
+    [data-testid="stSidebar"] .stButton > button:hover {{
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateX(2px);
+    }}
+
+    [data-testid="stSidebar"] .stButton > button:hover::after {{
+        border-left-color: rgba(255, 255, 255, 0.9);
+    }}
+
+    /* Sidebar Admin Section */
+    .admin-section-title {{
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding: 8px 12px;
+        margin-bottom: 6px;
+    }}
+
+    /* Sidebar Logout */
+    .logout-section {{
+        margin-top: auto;
+        padding: 16px 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }}
+
+    .logout-section .stButton > button {{
+        background: rgba(239, 68, 68, 0.12);
+        border-color: rgba(239, 68, 68, 0.2);
+        color: #FCA5A5;
+    }}
+
+    .logout-section .stButton > button::after {{
+        display: none;
+    }}
+
+    .logout-section .stButton > button:hover {{
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: #ffffff;
+    }}
+
+    /* Sidebar Footer */
+    .ewp-footer {{
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        padding: 16px 12px 8px 12px;
+        text-align: center;
+    }}
+
+    [data-testid="stSidebar"] hr {{
+        margin: 16px 12px;
+        border-color: rgba(255, 255, 255, 0.1);
+        opacity: 0.6;
+    }}
+    /* ===== END SIDEBAR STYLING ===== */
 
     /* ===== Page Header ===== */
     .page-header {{
