@@ -1,4 +1,4 @@
-"""Dashboard Page - Enhanced Modern UI"""
+"""Dashboard Page - Professional SaaS Colors"""
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
@@ -15,23 +15,35 @@ from components.sidebar import render_sidebar
 
 # Get branding
 tenant = st.session_state.get("tenant", {})
-branding = tenant.get("branding", {"primary_color": "#2CA01C", "company_name": "Elite Wall Pro"})
+branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
 
 render_sidebar(branding)
 
-# Enhanced Global UI Styling
-primary_color = branding.get("primary_color", "#2CA01C")
+# Professional SaaS Color Palette
+primary_color = branding.get("primary_color", "#6366F1")
 
 st.markdown(
     f"""
     <style>
+    /* ===== Professional Color Palette ===== */
+    :root {{
+        --primary-500: #6366F1;
+        --gray-50: #F8FAFC;
+        --gray-200: #E2E8F0;
+        --gray-300: #CBD5E1;
+        --gray-600: #475569;
+        --gray-900: #0F172A;
+        --success: #10B981;
+        --warning: #F59E0B;
+    }}
+    
     /* ===== Global Foundation ===== */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     html, body, [class*="css"] {{
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: #f7f9fc;
-        color: #1a1a1a;
+        background-color: var(--gray-50);
+        color: var(--gray-900);
     }}
 
     .block-container {{
@@ -46,44 +58,41 @@ st.markdown(
     .page-header {{
         margin-bottom: 2.5rem;
         padding-bottom: 1.5rem;
-        border-bottom: 2px solid #e8edf5;
+        border-bottom: 1px solid var(--gray-200);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }}
 
     .page-title {{
-        font-size: 2.25rem;
+        font-size: 2rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--gray-900);
         margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
+        letter-spacing: -0.03em;
     }}
 
     .page-subtitle {{
-        font-size: 1.05rem;
-        color: #64748b;
-        font-weight: 400;
+        font-size: 1rem;
+        color: var(--gray-600);
+        font-weight: 500;
     }}
 
     .export-button {{
         background: #ffffff;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-300);
         padding: 10px 20px;
         border-radius: 8px;
-        color: #334155;
+        color: var(--gray-600);
         font-weight: 600;
         font-size: 0.95rem;
         cursor: pointer;
         transition: all 0.2s ease;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }}
 
     .export-button:hover {{
-        background: #f8fafc;
-        border-color: #cbd5e1;
-        transform: translateY(-1px);
+        background: var(--gray-50);
+        border-color: var(--gray-600);
     }}
 
     /* ===== Cards ===== */
@@ -91,8 +100,8 @@ st.markdown(
         background: #ffffff;
         padding: 24px;
         border-radius: 12px;
-        border: 1px solid #e8edf5;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+        border: 1px solid var(--gray-200);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         margin-bottom: 24px;
     }}
 
@@ -101,39 +110,38 @@ st.markdown(
         background: #ffffff;
         padding: 20px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        border: 1px solid var(--gray-200);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         transition: all 0.2s ease;
     }}
 
     [data-testid="stMetric"]:hover {{
         border-color: {primary_color}40;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
-        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
     }}
 
     [data-testid="stMetric"] label {{
-        font-size: 0.875rem !important;
-        font-weight: 500 !important;
-        color: #64748b !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        color: var(--gray-600) !important;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.08em;
     }}
 
     [data-testid="stMetric"] [data-testid="stMetricValue"] {{
         font-size: 2rem !important;
         font-weight: 700 !important;
-        color: #0f172a !important;
+        color: var(--gray-900) !important;
     }}
 
     /* ===== Section Headers ===== */
     .section-header {{
         font-size: 1.25rem;
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 1.25rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 1rem;
         padding-bottom: 0.75rem;
-        border-bottom: 2px solid #e8edf5;
+        border-bottom: 1px solid var(--gray-200);
     }}
 
     /* ===== Job Table ===== */
@@ -143,7 +151,7 @@ st.markdown(
         gap: 16px;
         padding: 16px 20px;
         background: #ffffff;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         border-radius: 8px;
         margin-bottom: 10px;
         transition: all 0.2s ease;
@@ -151,36 +159,23 @@ st.markdown(
 
     .job-table-row:hover {{
         border-color: {primary_color}40;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        transform: translateY(-1px);
-    }}
-
-    .job-info {{
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     }}
 
     .job-number {{
         font-weight: 700;
-        color: #0f172a;
+        color: var(--gray-900);
         font-size: 1rem;
     }}
 
     .job-name {{
-        color: #64748b;
+        color: var(--gray-600);
         font-size: 0.875rem;
-    }}
-
-    .job-metric {{
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
     }}
 
     .metric-label {{
         font-size: 0.75rem;
-        color: #64748b;
+        color: var(--gray-600);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-weight: 500;
@@ -188,36 +183,27 @@ st.markdown(
 
     .metric-value {{
         font-weight: 600;
-        color: #0f172a;
+        color: var(--gray-900);
         font-size: 1rem;
     }}
 
     .profit-positive {{
-        color: #059669;
+        color: var(--success);
         font-weight: 600;
     }}
 
     .profit-negative {{
-        color: #dc2626;
+        color: #EF4444;
         font-weight: 600;
-    }}
-
-    /* ===== Chart Containers ===== */
-    .chart-container {{
-        background: #ffffff;
-        padding: 24px;
-        border-radius: 12px;
-        border: 1px solid #e8edf5;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }}
 
     /* ===== Empty State ===== */
     .empty-state {{
         text-align: center;
-        padding: 60px 20px;
+        padding: 60px 30px;
         background: #ffffff;
         border-radius: 12px;
-        border: 2px dashed #e8edf5;
+        border: 2px dashed var(--gray-300);
     }}
 
     .empty-state-icon {{
@@ -228,13 +214,13 @@ st.markdown(
 
     .empty-state-title {{
         font-size: 1.25rem;
-        font-weight: 600;
-        color: #334155;
+        font-weight: 700;
+        color: var(--gray-900);
         margin-bottom: 0.5rem;
     }}
 
     .empty-state-text {{
-        color: #64748b;
+        color: var(--gray-600);
         margin-bottom: 0.5rem;
     }}
 
@@ -247,12 +233,6 @@ st.markdown(
         
         .job-table-row {{
             grid-template-columns: 1fr;
-        }}
-        
-        .page-header {{
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
         }}
     }}
     </style>
@@ -297,7 +277,7 @@ try:
     total_profit = sum(float(j.get("profit", 0) or 0) for j in active_jobs)
     avg_margin = ((total_profit / total_contract * 100) if total_contract > 0 else 0)
     
-    # Enhanced KPI Section
+    # KPI Section
     cols = st.columns(5)
     kpi_data = [
         ("Active Jobs", f"{len(active_jobs)}", None),
@@ -325,11 +305,11 @@ try:
             s = j.get("status", "unknown")
             status_counts[s] = status_counts.get(s, 0) + 1
         
-        # Enhanced color scheme
+        # Professional color scheme
         colors = {
             'active': '#10b981',
-            'completed': '#3b82f6',
-            'estimate': '#f59e0b',
+            'completed': '#6366F1',
+            'estimate': '#F59E0B',
             'on_hold': '#8b5cf6',
             'unknown': '#6b7280'
         }
@@ -372,7 +352,7 @@ try:
                     name="Budget",
                     x=df["Job"],
                     y=df["Budget"],
-                    marker_color='#94a3b8',
+                    marker_color='#CBD5E1',
                     hovertemplate='<b>%{x}</b><br>Budget: $%{y:,.0f}<extra></extra>'
                 ),
                 go.Bar(
@@ -400,7 +380,7 @@ try:
     st.write("")
     
     # Top Jobs Section
-    st.markdown('<div class="section-header">🔈 Top Jobs by Profit</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header">📈 Top Jobs by Profit</div>', unsafe_allow_html=True)
     
     sorted_jobs = sorted(active_jobs, key=lambda x: float(x.get("profit", 0) or 0), reverse=True)[:5]
     
