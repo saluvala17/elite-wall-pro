@@ -1,6 +1,7 @@
 """
 Elite Wall Pro - Streamlit Frontend
-Modern Purple Theme with Bold Sidebar Navigation
+Professional SaaS Color Palette (Inspired by Notion, Linear, Slack)
+Muted, Sophisticated Colors for Better UX
 """
 
 import streamlit as st
@@ -63,31 +64,62 @@ def get_branding():
     if st.session_state.tenant:
         branding = st.session_state.tenant.get("branding", {})
         return {
-            "primary_color": branding.get("primary_color", "#7C3AED"),
+            "primary_color": branding.get("primary_color", "#6366F1"),  # Professional Indigo
             "company_name": branding.get("company_name", "Elite Wall Pro"),
             "logo_url": branding.get("logo_url"),
         }
     return {
-        "primary_color": "#7C3AED",
+        "primary_color": "#6366F1",  # Indigo-500
         "company_name": "Elite Wall Pro",
         "logo_url": None,
     }
 
 
 # --------------------------------------------------
-# Enhanced Global UI Styling (Purple/Violet Theme)
+# Professional SaaS Color Palette (Research-Based)
 # --------------------------------------------------
 def apply_global_css(primary_color: str):
     st.markdown(
         f"""
         <style>
+        /* ===== Professional Color Palette ===== */
+        :root {{
+            /* Primary Colors - Sophisticated Indigo (Like Linear/Notion) */
+            --primary-600: #4F46E5;
+            --primary-500: #6366F1;
+            --primary-400: #818CF8;
+            
+            /* Sidebar Colors - Deep Navy/Slate (Professional) */
+            --sidebar-bg-start: #1E293B;
+            --sidebar-bg-mid: #334155;
+            --sidebar-bg-end: #475569;
+            
+            /* Neutral Grays - Clean & Modern */
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            
+            /* Semantic Colors */
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+        }}
+        
         /* ===== Global Foundation ===== */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         html, body, [class*="css"] {{
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #f5f3ff;
-            color: #1a1a1a;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
         }}
 
         /* Remove default Streamlit padding */
@@ -99,19 +131,19 @@ def apply_global_css(primary_color: str):
             max-width: 1400px !important;
         }}
 
-        /* ===== Enhanced Sidebar Styling (Purple Theme) ===== */
+        /* ===== Professional Sidebar (Slate/Navy) ===== */
         [data-testid="stSidebar"] {{
-            background: linear-gradient(180deg, #5B21B6 0%, #7C3AED 50%, #8B5CF6 100%);
-            border-right: none;
-            box-shadow: 4px 0 20px rgba(124, 58, 237, 0.15);
+            background: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-mid) 50%, var(--sidebar-bg-end) 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
         }}
 
         [data-testid="stSidebar"] > div:first-child {{
             background: transparent;
-            padding-top: 0.1rem;
+            padding-top: 0.5rem;
         }}
 
-        /* Sidebar Logo - Absolute Top Corner (Like Fasto) */
+        /* Sidebar Logo - Absolute Top Corner */
         .sidebar-logo {{
             display: flex;
             align-items: center;
@@ -121,7 +153,7 @@ def apply_global_css(primary_color: str):
         }}
 
         .sidebar-logo-icon {{
-            background: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
             width: 44px;
             height: 44px;
             border-radius: 12px;
@@ -130,85 +162,73 @@ def apply_global_css(primary_color: str):
             justify-content: center;
             font-size: 1.3rem;
             flex-shrink: 0;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }}
 
         .sidebar-logo-text {{
             color: #ffffff;
             font-size: 1.2rem;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: -0.02em;
         }}
 
-        /* Override Streamlit's button styling in sidebar - Unified Menu */
+        /* Sidebar Navigation Buttons */
         [data-testid="stSidebar"] .stButton {{
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }}
 
         [data-testid="stSidebar"] .stButton > button {{
             width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.9);
             text-align: left;
-            padding: 14px 18px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
             transition: all 0.2s ease;
             height: auto;
-            min-height: 48px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            gap: 10px;
         }}
 
-        /* White arrow/chevron for navigation buttons */
+        /* White arrow for navigation */
         [data-testid="stSidebar"] .stButton > button::after {{
             content: '';
             margin-left: auto;
             width: 0;
             height: 0;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 6px solid rgba(255, 255, 255, 0.6);
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-left: 5px solid rgba(255, 255, 255, 0.4);
             transition: all 0.2s ease;
         }}
 
         [data-testid="stSidebar"] .stButton > button:hover {{
-            background: rgba(255, 255, 255, 0.18);
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: translateX(3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-        }}
-
-        [data-testid="stSidebar"] .stButton > button:hover::after {{
-            border-left-color: rgba(255, 255, 255, 1);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
             transform: translateX(2px);
         }}
 
-        [data-testid="stSidebar"] .stButton > button:active {{
-            background: rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.35);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        [data-testid="stSidebar"] .stButton > button:hover::after {{
+            border-left-color: rgba(255, 255, 255, 0.9);
         }}
 
-        /* Logout button special styling */
+        /* Logout button */
         .logout-section {{
             margin-top: auto;
             padding: 16px 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }}
 
         .logout-section .stButton > button {{
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.2);
             color: #FCA5A5;
-            font-weight: 700;
         }}
 
         .logout-section .stButton > button::after {{
@@ -216,62 +236,49 @@ def apply_global_css(primary_color: str):
         }}
 
         .logout-section .stButton > button:hover {{
-            background: rgba(239, 68, 68, 0.25);
-            border-color: rgba(239, 68, 68, 0.5);
-            color: #ffffff;
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.3);
         }}
 
-        /* Hide default Streamlit sidebar elements */
-        [data-testid="stSidebar"] hr {{
-            margin: 20px 12px;
-            border-color: rgba(255, 255, 255, 0.15);
-            opacity: 0.6;
-        }}
-
-        /* ===== Typography ===== */
+        /* ===== Main Content Typography ===== */
         .page-header {{
             margin-bottom: 2.5rem;
             padding-bottom: 1.5rem;
-            border-bottom: 2px solid #e9d5ff;
+            border-bottom: 1px solid var(--gray-200);
         }}
 
         .page-title {{
-            font-size: 2.25rem;
-            font-weight: 800;
-            color: #5B21B6;
-            margin-bottom: 0.1rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
             letter-spacing: -0.03em;
-            line-height: 1.2;
         }}
 
         .page-subtitle {{
-            font-size: 1.05rem;
-            color: #9333EA;
+            font-size: 1rem;
+            color: var(--gray-600);
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }}
 
         .subtitle-separator {{
-            color: #c4b5fd;
-            margin: 0 4px;
+            color: var(--gray-400);
+            margin: 0 6px;
         }}
 
         /* ===== Cards & Containers ===== */
         .card {{
             background: #ffffff;
             padding: 24px;
-            border-radius: 14px;
-            border: 1px solid #ede9fe;
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08), 0 1px 3px rgba(124, 58, 237, 0.05);
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
         }}
 
         .card:hover {{
-            box-shadow: 0 8px 16px rgba(124, 58, 237, 0.12), 0 4px 8px rgba(124, 58, 237, 0.08);
-            border-color: #ddd6fe;
-            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border-color: var(--gray-300);
         }}
 
         /* ===== Job Cards ===== */
@@ -279,233 +286,204 @@ def apply_global_css(primary_color: str):
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 22px 26px;
-            border-radius: 12px;
+            padding: 20px 24px;
+            border-radius: 10px;
             background: #ffffff;
-            border: 1px solid #ede9fe;
-            border-left: 5px solid {primary_color};
-            margin-bottom: 14px;
-            transition: all 0.3s ease;
+            border: 1px solid var(--gray-200);
+            border-left: 4px solid {primary_color};
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
             cursor: pointer;
         }}
 
         .job-card:hover {{
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.15);
-            border-left-width: 6px;
-        }}
-
-        .job-card-content {{
-            flex: 1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            border-left-width: 5px;
         }}
 
         .job-title {{
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #1e1b4b;
-            margin-bottom: 7px;
-            line-height: 1.3;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--gray-900);
+            margin-bottom: 6px;
         }}
 
         .job-meta {{
-            font-size: 0.9rem;
-            color: #7c3aed;
+            font-size: 0.875rem;
+            color: var(--gray-600);
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-weight: 500;
-        }}
-
-        .job-meta-item {{
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }}
-
-        .job-stats {{
-            text-align: right;
-            min-width: 150px;
+            gap: 10px;
         }}
 
         .job-amount {{
             font-weight: 700;
-            font-size: 1.2rem;
-            color: #1e1b4b;
-            margin-bottom: 5px;
+            font-size: 1.15rem;
+            color: var(--gray-900);
+            margin-bottom: 4px;
         }}
 
         .job-margin {{
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 8px;
-            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
         }}
 
         .margin-positive {{
-            background: #dcfce7;
-            color: #15803d;
+            background: var(--success-light);
+            color: var(--success);
         }}
 
         .margin-negative {{
-            background: #fee2e2;
-            color: #dc2626;
+            background: var(--danger-light);
+            color: var(--danger);
         }}
 
         /* ===== Metrics/KPI Cards ===== */
         [data-testid="stMetric"] {{
             background: #ffffff;
-            padding: 22px;
-            border-radius: 12px;
-            border: 1px solid #ede9fe;
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
-            transition: all 0.3s ease;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
         }}
 
         [data-testid="stMetric"]:hover {{
-            border-color: {primary_color}60;
-            box-shadow: 0 8px 16px rgba(124, 58, 237, 0.15);
-            transform: translateY(-2px);
+            border-color: {primary_color}40;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
         }}
 
         [data-testid="stMetric"] label {{
-            font-size: 0.85rem !important;
+            font-size: 0.8rem !important;
             font-weight: 600 !important;
-            color: #7c3aed !important;
+            color: var(--gray-600) !important;
             text-transform: uppercase;
             letter-spacing: 0.08em;
         }}
 
         [data-testid="stMetric"] [data-testid="stMetricValue"] {{
-            font-size: 2.2rem !important;
-            font-weight: 800 !important;
-            color: #5B21B6 !important;
+            font-size: 2rem !important;
+            font-weight: 700 !important;
+            color: var(--gray-900) !important;
         }}
 
         /* ===== Buttons ===== */
         .stButton > button {{
-            border-radius: 10px;
-            height: 46px;
-            font-weight: 700;
+            border-radius: 8px;
+            height: 44px;
+            font-weight: 600;
             font-size: 0.95rem;
-            border: 2px solid transparent;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 6px rgba(124, 58, 237, 0.15);
         }}
 
         .stButton > button:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(124, 58, 237, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }}
 
         .stButton > button[kind="primary"] {{
-            background: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%) !important;
-            border-color: #7C3AED !important;
+            background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%) !important;
+            border: none !important;
             color: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
         }}
 
         .stButton > button[kind="primary"]:hover {{
-            background: linear-gradient(135deg, #6D28D9 0%, #7C3AED 100%) !important;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
         }}
 
         .stButton > button[kind="secondary"] {{
             background: #ffffff !important;
-            border-color: #e9d5ff !important;
-            color: #7C3AED !important;
+            border: 1px solid var(--gray-300) !important;
+            color: var(--gray-700) !important;
         }}
 
         .stButton > button[kind="secondary"]:hover {{
-            border-color: #c4b5fd !important;
-            background: #faf5ff !important;
+            background: var(--gray-50) !important;
+            border-color: var(--gray-400) !important;
         }}
 
         /* ===== Section Headers ===== */
         .section-header {{
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: #5B21B6;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 2px solid #e9d5ff;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
         }}
 
         /* ===== Quick Actions Panel ===== */
         .action-panel {{
-            background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
-            padding: 26px;
-            border-radius: 14px;
-            border: 1px solid #e9d5ff;
-            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+            background: linear-gradient(135deg, #ffffff 0%, var(--gray-50) 100%);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }}
 
         .action-panel-title {{
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #5B21B6;
-            margin-bottom: 1.2rem;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
         }}
 
-        /* ===== Alert Card ===== */
+        /* ===== Alert Cards ===== */
         .alert-card {{
             margin-top: 20px;
-            padding: 18px 20px;
-            border-radius: 12px;
-            border-left: 5px solid;
-            font-size: 0.92rem;
-            line-height: 1.6;
+            padding: 16px 18px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }}
 
         .alert-warning {{
-            background: #fef3c7;
-            border-color: #f59e0b;
+            background: var(--warning-light);
+            border-color: var(--warning);
             color: #92400e;
         }}
 
         .alert-success {{
-            background: #d1fae5;
-            border-color: #10b981;
+            background: var(--success-light);
+            border-color: var(--success);
             color: #065f46;
         }}
 
         .alert-title {{
             font-weight: 700;
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }}
-
-        /* ===== Info Messages ===== */
-        .stAlert {{
-            border-radius: 12px;
-            border-left-width: 5px;
-            padding: 18px 22px;
+            margin-bottom: 4px;
         }}
 
         /* ===== Empty State ===== */
         .empty-state {{
             text-align: center;
-            padding: 70px 30px;
-            background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
-            border-radius: 16px;
-            border: 2px dashed #ddd6fe;
+            padding: 60px 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px dashed var(--gray-300);
         }}
 
         .empty-state-icon {{
-            font-size: 3.5rem;
-            margin-bottom: 1.2rem;
-            opacity: 0.6;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }}
 
         .empty-state-title {{
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: #5B21B6;
-            margin-bottom: 0.6rem;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
         }}
 
         .empty-state-text {{
-            color: #7c3aed;
-            margin-bottom: 1.8rem;
-            font-size: 1.05rem;
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
         }}
 
         /* ===== Responsive Design ===== */
@@ -516,17 +494,13 @@ def apply_global_css(primary_color: str):
             }}
             
             .page-title {{
-                font-size: 1.85rem;
+                font-size: 1.75rem;
             }}
             
             .job-card {{
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 14px;
-            }}
-            
-            .job-stats {{
-                text-align: left;
+                gap: 12px;
             }}
         }}
         </style>
@@ -536,13 +510,13 @@ def apply_global_css(primary_color: str):
 
 
 # --------------------------------------------------
-# Enhanced Sidebar (Purple Theme - Professional SaaS Style)
+# Professional Sidebar
 # --------------------------------------------------
 def render_enhanced_sidebar(branding):
-    """Render purple-themed sidebar with clean, unified navigation"""
+    """Render professional SaaS sidebar with muted colors"""
     
     with st.sidebar:
-        # Company Logo - Top Left
+        # Company Logo
         company_name = branding.get("company_name", "Elite Wall Pro")
         
         st.markdown(f"""
@@ -554,7 +528,7 @@ def render_enhanced_sidebar(branding):
         
         st.markdown('<div style="margin: 20px 0;"></div>', unsafe_allow_html=True)
         
-        # Unified Navigation Menu (No Section Headers)
+        # Unified Navigation
         if st.button("🏠  Dashboard", key="nav_home", use_container_width=True):
             st.switch_page("app.py")
         
@@ -579,7 +553,7 @@ def render_enhanced_sidebar(branding):
         # Spacer
         st.markdown('<div style="flex-grow: 1; min-height: 50px;"></div>', unsafe_allow_html=True)
         
-        # Logout Section
+        # Logout
         st.markdown('<div class="logout-section">', unsafe_allow_html=True)
         if st.button("🚪  Logout", key="logout_btn", use_container_width=True):
             st.session_state.authenticated = False
@@ -602,12 +576,10 @@ def main():
     branding = get_branding()
     apply_global_css(branding["primary_color"])
 
-    # Enhanced Sidebar
+    # Sidebar
     render_enhanced_sidebar(branding)
 
-    # --------------------------------------------------
-    # Enhanced Header Section
-    # --------------------------------------------------
+    # Header
     st.markdown(
         f"""
         <div class="page-header">
@@ -628,7 +600,6 @@ def main():
         jobs = api.get_jobs() or []
 
         if not jobs:
-            # Enhanced Empty State
             st.markdown(
                 """
                 <div class="empty-state">
@@ -657,16 +628,14 @@ def main():
         over_budget = len([j for j in active_jobs if float(j.get("variance") or 0) < 0])
         total_margin = ((total_contract - total_costs) / total_contract * 100) if total_contract else 0
 
-        # --------------------------------------------------
-        # Enhanced KPI Section
-        # --------------------------------------------------
+        # KPI Section
         c1, c2, c3, c4 = st.columns(4)
 
         with c1:
-            st.metric("Active Jobs", f"{len(active_jobs)}", delta=None)
+            st.metric("Active Jobs", f"{len(active_jobs)}")
 
         with c2:
-            st.metric("Contract Value", f"${total_contract:,.0f}", delta=None)
+            st.metric("Contract Value", f"${total_contract:,.0f}")
 
         with c3:
             st.metric("Total Costs", f"${total_costs:,.0f}", 
@@ -681,15 +650,12 @@ def main():
         st.write("")
         st.write("")
 
-        # --------------------------------------------------
-        # Enhanced Main Layout
-        # --------------------------------------------------
+        # Main Layout
         col_main, col_actions = st.columns([2.5, 1], gap="large")
 
         with col_main:
             st.markdown('<div class="section-header">Active Jobs</div>', unsafe_allow_html=True)
 
-            # Show up to 8 jobs
             display_jobs = active_jobs[:8] if len(active_jobs) > 8 else active_jobs
             
             for job in display_jobs:
@@ -697,7 +663,7 @@ def main():
                 cost = float(job.get("total_costs") or 0)
                 margin = ((revenue - cost) / revenue * 100) if revenue else 0
                 
-                status_color = "#dc2626" if margin < 0 else branding["primary_color"]
+                status_color = "#EF4444" if margin < 0 else branding["primary_color"]
                 margin_class = "margin-negative" if margin < 0 else "margin-positive"
                 margin_icon = "⚠️" if margin < 0 else "✓"
 
@@ -707,13 +673,9 @@ def main():
                         <div class="job-card-content">
                             <div class="job-title">{job.get("job_name", "Untitled Job")}</div>
                             <div class="job-meta">
-                                <span class="job-meta-item">
-                                    <strong>#{job.get("job_number", "N/A")}</strong>
-                                </span>
+                                <strong>#{job.get("job_number", "N/A")}</strong>
                                 <span>·</span>
-                                <span class="job-meta-item">
-                                    {job.get("customer_name", "No customer assigned")}
-                                </span>
+                                <span>{job.get("customer_name", "No customer assigned")}</span>
                             </div>
                         </div>
                         <div class="job-stats">
@@ -727,7 +689,6 @@ def main():
                     unsafe_allow_html=True
                 )
             
-            # Show "View All" button if more jobs
             if len(active_jobs) > 8:
                 st.write("")
                 col_center1, col_center2, col_center3 = st.columns([1, 1, 1])
@@ -765,13 +726,13 @@ def main():
                      use_container_width=True,
                      on_click=lambda: st.switch_page("pages/4_Customers.py"))
 
-            # Enhanced Alert Card
+            # Alert Card
             if over_budget > 0:
                 st.markdown(
                     f"""
                     <div class="alert-card alert-warning">
                         <div class="alert-title">⚠️ Budget Alert</div>
-                        <div>{over_budget} job{'s' if over_budget > 1 else ''} currently over budget. Review immediately.</div>
+                        <div>{over_budget} job{'s' if over_budget > 1 else ''} currently over budget.</div>
                     </div>
                     """,
                     unsafe_allow_html=True
