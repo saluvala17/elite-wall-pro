@@ -10,16 +10,9 @@ def get_professional_css(primary_color: str = "#6366F1") -> str:
     - Sidebar styling
     - Main content styling
     - Component styling
-    - Hides Streamlit defaults
     """
     return f"""
     <style>
-    /* ===== Hide Streamlit Defaults (Critical!) ===== */
-    #MainMenu {{ visibility: hidden !important; }}
-    footer {{ visibility: hidden !important; }}
-    header {{ visibility: hidden !important; }}
-    [data-testid="stSidebarNav"] {{ display: none !important; }}
-    
     /* ===== Professional Color Palette ===== */
     :root {{
         /* Primary Colors - Sophisticated Indigo */

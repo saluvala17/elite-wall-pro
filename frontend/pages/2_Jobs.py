@@ -9,19 +9,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 st.set_page_config(page_title="Jobs | Elite Wall Pro", page_icon="📋", layout="wide")
 
-# CRITICAL: Hide Streamlit defaults FIRST
-st.markdown(
-    """
-    <style>
-        #MainMenu { visibility: hidden !important; }
-        footer { visibility: hidden !important; }
-        header { visibility: hidden !important; }
-        [data-testid="stSidebarNav"] { display: none !important; }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
