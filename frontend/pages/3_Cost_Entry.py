@@ -1,66 +1,55 @@
-"""Cost Entry Page with Receipt Scanner - Enhanced Modern UI"""
+"""Cost Entry Page with Receipt Scanner - Professional SaaS Colors"""
 import streamlit as st
 import base64
 from datetime import date, timedelta
+import sys
+from pathlib import Path
+
+# Add components to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 st.set_page_config(page_title="Cost Entry | Elite Wall Pro", page_icon="💰", layout="wide")
+
+# CRITICAL: Hide Streamlit defaults FIRST
+st.markdown(
+    """
+    <style>
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
+        header { visibility: hidden !important; }
+        [data-testid="stSidebarNav"] { display: none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
+# Import shared styles and sidebar
+from components.shared_styles import get_professional_css
 from components.sidebar import render_sidebar
 
+# Get branding
 tenant = st.session_state.get("tenant", {})
-branding = tenant.get("branding", {"primary_color": "#2CA01C", "company_name": "Elite Wall Pro"})
-render_sidebar(branding)
+branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
+primary_color = branding.get("primary_color", "#6366F1")
 
-# Enhanced Global UI Styling
-primary_color = branding.get("primary_color", "#2CA01C")
+# CRITICAL: Apply CSS BEFORE rendering sidebar
+st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
 
+# Additional Cost Entry page-specific CSS
 st.markdown(
     f"""
     <style>
-    /* ===== Global Foundation ===== */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    html, body, [class*="css"] {{
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: #f7f9fc;
-        color: #1a1a1a;
-    }}
-
-    .block-container {{
-        padding-top: 2rem !important;
-        padding-bottom: 3rem !important;
-        padding-left: 3rem !important;
-        padding-right: 3rem !important;
-        max-width: 1400px !important;
-    }}
-
-    /* ===== Page Header ===== */
-    .page-header {{
-        margin-bottom: 2.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 2px solid #e8edf5;
-    }}
-
-    .page-title {{
-        font-size: 2.25rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
-        line-height: 1.2;
-    }}
-
     /* ===== Tabs Enhancement ===== */
     .stTabs [data-baseweb="tab-list"] {{
         gap: 8px;
         background-color: #ffffff;
         padding: 8px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
     }}
 
     .stTabs [data-baseweb="tab"] {{
@@ -68,28 +57,28 @@ st.markdown(
         padding: 0 24px;
         background-color: transparent;
         border-radius: 6px;
-        color: #64748b;
+        color: var(--gray-600);
         font-weight: 600;
         border: none;
     }}
 
     .stTabs [aria-selected="true"] {{
-        background-color: {primary_color} !important;
+        background-color: var(--primary-500) !important;
         color: #ffffff !important;
     }}
 
     /* ===== Select Boxes ===== */
     .stSelectbox > div > div {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         background: #ffffff;
     }}
 
     /* ===== Success Banner ===== */
     .success-banner {{
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        background: linear-gradient(135deg, var(--success-light) 0%, #D1FAE5 100%);
         border: 1px solid #86efac;
-        border-left: 4px solid #10b981;
+        border-left: 4px solid var(--success);
         padding: 16px 20px;
         border-radius: 10px;
         margin-bottom: 20px;
@@ -109,13 +98,13 @@ st.markdown(
 
     .success-title {{
         font-weight: 600;
-        color: #065f46;
+        color: var(--success);
         margin-bottom: 4px;
     }}
 
     .success-details {{
         font-size: 0.875rem;
-        color: #047857;
+        color: var(--success);
     }}
 
     /* ===== Form Sections ===== */
@@ -123,7 +112,7 @@ st.markdown(
         background: #ffffff;
         padding: 24px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         margin-bottom: 20px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
     }}
@@ -131,16 +120,16 @@ st.markdown(
     .form-section-title {{
         font-size: 1.1rem;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--gray-900);
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #e8edf5;
+        border-bottom: 2px solid var(--gray-200);
     }}
 
     /* ===== Number Inputs ===== */
     .stNumberInput > div > div > input {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         padding: 12px 16px;
         background: #ffffff;
     }}
@@ -153,7 +142,7 @@ st.markdown(
     /* ===== Text Areas ===== */
     .stTextArea > div > div > textarea {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         padding: 12px 16px;
         background: #ffffff;
     }}
@@ -182,7 +171,7 @@ st.markdown(
     /* ===== File Uploader ===== */
     .uploadedFile {{
         background: #ffffff;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         border-radius: 8px;
         padding: 12px;
     }}
@@ -192,16 +181,16 @@ st.markdown(
         background: #ffffff;
         padding: 20px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
     }}
 
     /* ===== Scanned Data Card ===== */
     .scanned-data-card {{
-        background: #f8fafc;
+        background: var(--gray-50);
         padding: 20px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         margin-top: 20px;
     }}
 
@@ -216,13 +205,13 @@ st.markdown(
     }}
 
     .confidence-high {{
-        background: #ecfdf5;
-        color: #059669;
+        background: var(--success-light);
+        color: var(--success);
     }}
 
     .confidence-medium {{
-        background: #fffbeb;
-        color: #d97706;
+        background: var(--warning-light);
+        color: var(--warning);
     }}
 
     /* ===== Line Item Row ===== */
@@ -230,7 +219,7 @@ st.markdown(
         background: #ffffff;
         padding: 16px;
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         margin-bottom: 10px;
         display: grid;
         grid-template-columns: 2fr 1.5fr 0.5fr;
@@ -239,12 +228,12 @@ st.markdown(
     }}
 
     .item-description {{
-        color: #0f172a;
+        color: var(--gray-900);
         font-weight: 500;
     }}
 
     .item-amount {{
-        color: #0f172a;
+        color: var(--gray-900);
         font-weight: 600;
         text-align: right;
     }}
@@ -254,27 +243,27 @@ st.markdown(
         background: #ffffff;
         padding: 16px 20px;
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }}
 
     .category-label {{
-        color: #64748b;
+        color: var(--gray-600);
         font-weight: 500;
         text-transform: capitalize;
     }}
 
     .category-value {{
-        color: #0f172a;
+        color: var(--gray-900);
         font-weight: 700;
         font-size: 1.1rem;
     }}
 
     /* ===== Warning Box ===== */
     .warning-box {{
-        background: #fffbeb;
+        background: var(--warning-light);
         border: 1px solid #fde68a;
         border-left: 4px solid #f59e0b;
         padding: 16px 20px;
@@ -295,17 +284,17 @@ st.markdown(
     /* ===== History Expander ===== */
     .streamlit-expanderHeader {{
         background: #ffffff;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         border-radius: 10px;
         padding: 16px 20px !important;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--gray-900);
         transition: all 0.2s ease;
     }}
 
     .streamlit-expanderHeader:hover {{
-        border-color: {primary_color}40;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border-color: rgba(99, 102, 241, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     }}
 
     div[data-testid="stExpander"] {{
@@ -315,8 +304,8 @@ st.markdown(
     }}
 
     .streamlit-expanderContent {{
-        background: #f8fafc;
-        border: 1px solid #e8edf5;
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
         border-top: none;
         border-radius: 0 0 10px 10px;
         padding: 20px;
@@ -344,10 +333,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# NOW render sidebar (after all CSS is loaded)
+render_sidebar(branding)
+
 # Header
 st.markdown("""
 <div class='page-header'>
-    <div class='page-title'>💰 Weekly Cost Entry</div>
+    <div class='page-title'>💰 Cost Entry</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -470,8 +462,8 @@ with entry_tab:
         total_costs = insurance + labor + stamps + material + subs_bond + equipment
         st.markdown(f"""
         <div class='category-total' style='background: #f0fdf4; border-color: #86efac;'>
-            <span class='category-label' style='color: #065f46;'>Total Weekly Costs</span>
-            <span class='category-value' style='color: #065f46;'>${total_costs:,.2f}</span>
+            <span class='category-label' style='color: var(--success);'>Total Weekly Costs</span>
+            <span class='category-value' style='color: var(--success);'>${total_costs:,.2f}</span>
         </div>
         """, unsafe_allow_html=True)
         
