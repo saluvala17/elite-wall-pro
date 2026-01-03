@@ -3,18 +3,6 @@ import streamlit as st
 
 st.set_page_config(page_title="Employees | Elite Wall Pro", page_icon="👷", layout="wide")
 
-st.markdown(
-    """
-    <style>
-        #MainMenu { visibility: hidden !important; }
-        footer { visibility: hidden !important; }
-        header { visibility: hidden !important; }
-        [data-testid="stSidebarNav"] { display: none !important; }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()

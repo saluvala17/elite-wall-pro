@@ -3,24 +3,12 @@ import streamlit as st
 
 st.set_page_config(page_title="Customers | Elite Wall Pro", page_icon="👥", layout="wide")
 
-st.markdown(
-    """
-    <style>
-        #MainMenu { visibility: hidden !important; }
-        footer { visibility: hidden !important; }
-        header { visibility: hidden !important; }
-        [data-testid="stSidebarNav"] { display: none !important; }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
 from components.sidebar import render_sidebar
-from components.shared_styles import get_professional_css
+
 tenant = st.session_state.get("tenant", {})
 branding = tenant.get("branding", {"primary_color": "#4A7C59", "company_name": "Elite Wall Pro"})
 render_sidebar(branding)
