@@ -411,35 +411,20 @@ def apply_global_css(primary_color: str):
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--gray-900);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--gray-200);
         }}
 
-        /* ===== Quick Actions Panel ===== */
-        .action-panel {{
-            background: linear-gradient(135deg, #ffffff 0%, var(--gray-50) 100%);
-            padding: 24px;
-            border-radius: 12px;
-            border: 1px solid var(--gray-200);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        }}
-
-        .action-panel-title {{
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            margin-bottom: 1rem;
-        }}
-
         /* ===== Alert Cards ===== */
         .alert-card {{
-            margin-top: 20px;
-            padding: 16px 18px;
+            margin-top: 24px;
+            padding: 20px;
             border-radius: 10px;
             border-left: 4px solid;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }}
 
         .alert-warning {{
@@ -650,103 +635,108 @@ def main():
         st.write("")
         st.write("")
 
-        # Main Layout
-        col_main, col_actions = st.columns([2.5, 1], gap="large")
+        # Full-Width Active Jobs Section
+        st.markdown('<div class="section-header">Active Jobs</div>', unsafe_allow_html=True)
 
-        with col_main:
-            st.markdown('<div class="section-header">Active Jobs</div>', unsafe_allow_html=True)
-
-            display_jobs = active_jobs[:8] if len(active_jobs) > 8 else active_jobs
+        display_jobs = active_jobs[:8] if len(active_jobs) > 8 else active_jobs
+        
+        for job in display_jobs:
+            revenue = float(job.get("contract_amount") or 0)
+            cost = float(job.get("total_costs") or 0)
+            margin = ((revenue - cost) / revenue * 100) if revenue else 0
             
-            for job in display_jobs:
-                revenue = float(job.get("contract_amount") or 0)
-                cost = float(job.get("total_costs") or 0)
-                margin = ((revenue - cost) / revenue * 100) if revenue else 0
-                
-                status_color = "#EF4444" if margin < 0 else branding["primary_color"]
-                margin_class = "margin-negative" if margin < 0 else "margin-positive"
-                margin_icon = "⚠️" if margin < 0 else "✓"
+            status_color = "#EF4444" if margin < 0 else branding["primary_color"]
+            margin_class = "margin-negative" if margin < 0 else "margin-positive"
+            margin_icon = "⚠️" if margin < 0 else "✓"
 
-                st.markdown(
-                    f"""
-                    <div class="job-card" style="border-left-color:{status_color}">
-                        <div class="job-card-content">
-                            <div class="job-title">{job.get("job_name", "Untitled Job")}</div>
-                            <div class="job-meta">
-                                <strong>#{job.get("job_number", "N/A")}</strong>
-                                <span>·</span>
-                                <span>{job.get("customer_name", "No customer assigned")}</span>
-                            </div>
-                        </div>
-                        <div class="job-stats">
-                            <div class="job-amount">${cost:,.0f}</div>
-                            <div class="job-margin {margin_class}">
-                                {margin_icon} {abs(margin):.1f}% margin
-                            </div>
+            st.markdown(
+                f"""
+                <div class="job-card" style="border-left-color:{status_color}">
+                    <div class="job-card-content">
+                        <div class="job-title">{job.get("job_name", "Untitled Job")}</div>
+                        <div class="job-meta">
+                            <strong>#{job.get("job_number", "N/A")}</strong>
+                            <span>·</span>
+                            <span>{job.get("customer_name", "No customer assigned")}</span>
                         </div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-            
-            if len(active_jobs) > 8:
-                st.write("")
-                col_center1, col_center2, col_center3 = st.columns([1, 1, 1])
-                with col_center2:
-                    st.button(
-                        f"View All {len(active_jobs)} Jobs →",
-                        use_container_width=True,
-                        on_click=lambda: st.switch_page("pages/2_Jobs.py")
-                    )
-
-        with col_actions:
-            st.markdown(
-                """
-                <div class="action-panel">
-                    <div class="action-panel-title">Quick Actions</div>
+                    <div class="job-stats">
+                        <div class="job-amount">${cost:,.0f}</div>
+                        <div class="job-margin {margin_class}">
+                            {margin_icon} {abs(margin):.1f}% margin
+                        </div>
+                    </div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
-
-            st.button("➕ New Job", 
-                     use_container_width=True,
-                     on_click=lambda: st.switch_page("pages/2_Jobs.py"),
-                     type="primary")
-
-            st.button("💰 Log Cost", 
-                     use_container_width=True,
-                     on_click=lambda: st.switch_page("pages/3_Cost_Entry.py"))
-
-            st.button("📊 Reports", 
-                     use_container_width=True,
-                     on_click=lambda: st.switch_page("pages/6_Reports.py"))
-
-            st.button("👥 Customers", 
-                     use_container_width=True,
-                     on_click=lambda: st.switch_page("pages/4_Customers.py"))
-
-            # Alert Card
-            if over_budget > 0:
-                st.markdown(
-                    f"""
-                    <div class="alert-card alert-warning">
-                        <div class="alert-title">⚠️ Budget Alert</div>
-                        <div>{over_budget} job{'s' if over_budget > 1 else ''} currently over budget.</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
+        
+        if len(active_jobs) > 8:
+            st.write("")
+            col_center1, col_center2, col_center3 = st.columns([1, 1, 1])
+            with col_center2:
+                st.button(
+                    f"View All {len(active_jobs)} Jobs →",
+                    use_container_width=True,
+                    on_click=lambda: st.switch_page("pages/2_Jobs.py")
                 )
-            else:
-                st.markdown(
-                    """
-                    <div class="alert-card alert-success">
-                        <div class="alert-title">✓ All Clear</div>
-                        <div>All jobs are on budget and tracking well.</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+
+        st.write("")
+        st.write("")
+
+        # Quick Actions - Horizontal Layout at Bottom
+        st.markdown('<div class="section-header">Quick Actions</div>', unsafe_allow_html=True)
+        
+        # Create 4-column horizontal layout for action buttons
+        action_col1, action_col2, action_col3, action_col4 = st.columns(4, gap="medium")
+        
+        with action_col1:
+            if st.button("➕ New Job", 
+                        use_container_width=True,
+                        type="primary",
+                        key="qa_new_job"):
+                st.switch_page("pages/2_Jobs.py")
+
+        with action_col2:
+            if st.button("💰 Log Cost", 
+                        use_container_width=True,
+                        key="qa_log_cost"):
+                st.switch_page("pages/3_Cost_Entry.py")
+
+        with action_col3:
+            if st.button("📊 Reports", 
+                        use_container_width=True,
+                        key="qa_reports"):
+                st.switch_page("pages/6_Reports.py")
+
+        with action_col4:
+            if st.button("👥 Customers", 
+                        use_container_width=True,
+                        key="qa_customers"):
+                st.switch_page("pages/4_Customers.py")
+
+        # Alert Card - Full Width at Bottom
+        st.write("")
+        if over_budget > 0:
+            st.markdown(
+                f"""
+                <div class="alert-card alert-warning">
+                    <div class="alert-title">⚠️ Budget Alert</div>
+                    <div>{over_budget} job{'s' if over_budget > 1 else ''} currently over budget.</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                """
+                <div class="alert-card alert-success">
+                    <div class="alert-title">✓ All Clear</div>
+                    <div>All jobs are on budget and tracking well.</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
     except Exception as e:
         st.error(f"⚠️ Failed to load dashboard data: {e}")
