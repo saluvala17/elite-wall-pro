@@ -11,22 +11,38 @@ if not st.session_state.get("authenticated"):
 from components.sidebar import render_sidebar
 
 tenant = st.session_state.get("tenant", {})
-branding = tenant.get("branding", {"primary_color": "#2CA01C", "company_name": "Elite Wall Pro"})
+branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
 render_sidebar(branding)
 
-# Enhanced Global UI Styling
-primary_color = branding.get("primary_color", "#2CA01C")
+# Professional SaaS Color Palette
+primary_color = branding.get("primary_color", "#6366F1")
 
 st.markdown(
     f"""
     <style>
+    /* ===== Professional Color Palette ===== */
+    :root {{
+        --primary-500: #6366F1;
+        --primary-600: #4F46E5;
+        --gray-50: #F8FAFC;
+        --gray-100: #F1F5F9;
+        --gray-200: #E2E8F0;
+        --gray-300: #CBD5E1;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-900: #0F172A;
+        --success: #10B981;
+        --success-light: #D1FAE5;
+        --danger: #EF4444;
+    }}
+    
     /* ===== Global Foundation ===== */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     html, body, [class*="css"] {{
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: #f7f9fc;
-        color: #1a1a1a;
+        background-color: var(--gray-50);
+        color: var(--gray-900);
     }}
 
     .block-container {{
@@ -41,15 +57,15 @@ st.markdown(
     .page-header {{
         margin-bottom: 2.5rem;
         padding-bottom: 1.5rem;
-        border-bottom: 2px solid #e8edf5;
+        border-bottom: 1px solid var(--gray-200);
     }}
 
     .page-title {{
-        font-size: 2.25rem;
+        font-size: 2rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--gray-900);
         margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
         line-height: 1.2;
     }}
 
@@ -59,7 +75,7 @@ st.markdown(
         background-color: #ffffff;
         padding: 8px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
     }}
 
     .stTabs [data-baseweb="tab"] {{
@@ -67,13 +83,13 @@ st.markdown(
         padding: 0 24px;
         background-color: transparent;
         border-radius: 6px;
-        color: #64748b;
+        color: var(--gray-600);
         font-weight: 600;
         border: none;
     }}
 
     .stTabs [aria-selected="true"] {{
-        background-color: {primary_color} !important;
+        background-color: var(--primary-500) !important;
         color: #ffffff !important;
     }}
 
@@ -82,43 +98,43 @@ st.markdown(
         background: #ffffff;
         padding: 20px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         margin-bottom: 24px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     }}
 
     /* ===== Input Fields ===== */
     .stTextInput > div > div > input {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         padding: 12px 16px;
         font-size: 0.95rem;
     }}
 
     .stTextInput > div > div > input:focus {{
-        border-color: {primary_color};
-        box-shadow: 0 0 0 3px {primary_color}20;
+        border-color: var(--primary-500);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     }}
 
     .stSelectbox > div > div {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
     }}
 
     /* ===== Job Expanders ===== */
     .streamlit-expanderHeader {{
         background: #ffffff;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         border-radius: 10px;
         padding: 16px 20px !important;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--gray-900);
         transition: all 0.2s ease;
     }}
 
     .streamlit-expanderHeader:hover {{
-        border-color: {primary_color}40;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border-color: rgba(99, 102, 241, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         transform: translateY(-1px);
     }}
 
@@ -129,8 +145,8 @@ st.markdown(
     }}
 
     .streamlit-expanderContent {{
-        background: #f8fafc;
-        border: 1px solid #e8edf5;
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
         border-top: none;
         border-radius: 0 0 10px 10px;
         padding: 20px;
@@ -148,23 +164,23 @@ st.markdown(
     }}
 
     .status-active {{
-        background: #ecfdf5;
-        color: #059669;
+        background: var(--success-light);
+        color: var(--success);
     }}
 
     .status-completed {{
-        background: #eff6ff;
-        color: #2563eb;
+        background: #EFF6FF;
+        color: #6366F1;
     }}
 
     .status-estimate {{
-        background: #fffbeb;
-        color: #d97706;
+        background: #FEF3C7;
+        color: #F59E0B;
     }}
 
     .status-on_hold {{
-        background: #f3f4f6;
-        color: #6b7280;
+        background: var(--gray-100);
+        color: var(--gray-600);
     }}
 
     /* ===== Metrics in Expander ===== */
@@ -172,13 +188,13 @@ st.markdown(
         background: #ffffff;
         padding: 16px;
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
     }}
 
     [data-testid="stMetric"] label {{
         font-size: 0.875rem !important;
         font-weight: 500 !important;
-        color: #64748b !important;
+        color: var(--gray-600) !important;
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }}
@@ -186,7 +202,7 @@ st.markdown(
     [data-testid="stMetric"] [data-testid="stMetricValue"] {{
         font-size: 1.5rem !important;
         font-weight: 700 !important;
-        color: #0f172a !important;
+        color: var(--gray-900) !important;
     }}
 
     /* ===== Buttons ===== */
@@ -197,23 +213,33 @@ st.markdown(
         font-size: 0.95rem;
         border: 1px solid transparent;
         transition: all 0.2s ease;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }}
 
     .stButton > button:hover {{
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }}
 
     .stButton > button[kind="primary"] {{
-        background: {primary_color} !important;
-        border-color: {primary_color} !important;
+        background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%) !important;
+        border: none !important;
+        color: #ffffff !important;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+    }}
+
+    .stButton > button[kind="primary"]:hover {{
+        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
     }}
 
     .stButton > button[kind="secondary"] {{
         background: #ffffff !important;
-        border-color: #e8edf5 !important;
-        color: #334155 !important;
+        border: 1px solid var(--gray-300) !important;
+        color: var(--gray-700) !important;
+    }}
+
+    .stButton > button[kind="secondary"]:hover {{
+        background: var(--gray-50) !important;
+        border-color: var(--gray-600) !important;
     }}
 
     /* ===== Form Sections ===== */
@@ -221,46 +247,46 @@ st.markdown(
         background: #ffffff;
         padding: 24px;
         border-radius: 10px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         margin-bottom: 20px;
     }}
 
     .form-section-title {{
         font-size: 1.1rem;
         font-weight: 600;
-        color: #0f172a;
+        color: var(--gray-900);
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #e8edf5;
+        border-bottom: 1px solid var(--gray-200);
     }}
 
     /* ===== Number Inputs ===== */
     .stNumberInput > div > div > input {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         padding: 12px 16px;
     }}
 
     /* ===== Text Areas ===== */
     .stTextArea > div > div > textarea {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
         padding: 12px 16px;
     }}
 
     /* ===== Date Inputs ===== */
     .stDateInput > div > div > input {{
         border-radius: 8px;
-        border: 1px solid #e8edf5;
+        border: 1px solid var(--gray-200);
     }}
 
     /* ===== Empty State ===== */
     .empty-state {{
         text-align: center;
-        padding: 60px 20px;
+        padding: 60px 30px;
         background: #ffffff;
         border-radius: 12px;
-        border: 2px dashed #e8edf5;
+        border: 2px dashed var(--gray-300);
     }}
 
     .empty-state-icon {{
@@ -271,14 +297,14 @@ st.markdown(
 
     .empty-state-title {{
         font-size: 1.25rem;
-        font-weight: 600;
-        color: #334155;
+        font-weight: 700;
+        color: var(--gray-900);
         margin-bottom: 0.5rem;
     }}
 
     /* ===== Info Boxes ===== */
     .info-row {{
-        background: #f8fafc;
+        background: var(--gray-50);
         padding: 12px 16px;
         border-radius: 6px;
         margin-bottom: 8px;
@@ -288,12 +314,12 @@ st.markdown(
     }}
 
     .info-label {{
-        color: #64748b;
+        color: var(--gray-600);
         font-weight: 500;
     }}
 
     .info-value {{
-        color: #0f172a;
+        color: var(--gray-900);
         font-weight: 600;
     }}
 
