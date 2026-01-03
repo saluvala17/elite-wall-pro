@@ -25,12 +25,16 @@ from components.sidebar import render_sidebar
 from components.shared_styles import get_professional_css
 
 tenant = st.session_state.get("tenant", {})
-branding = tenant.get("branding", {"primary_color": "#2CA01C", "company_name": "Elite Wall Pro"})
-render_sidebar(branding)
+branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
 
-# Enhanced Global UI Styling
-primary_color = branding.get("primary_color", "#2CA01C")
+# Define primary_color BEFORE using it
+primary_color = branding.get("primary_color", "#6366F1")
+
+# Apply shared CSS BEFORE rendering sidebar
 st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
+
+# NOW render sidebar
+render_sidebar(branding)
 st.markdown(
     f"""
     <style>
