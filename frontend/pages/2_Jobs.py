@@ -1,250 +1,47 @@
-"""Jobs Management Page - Professional SaaS Colors"""
+"""Jobs Management Page - Professional SaaS Colors (Fixed Sidebar)"""
 import streamlit as st
 from datetime import date
+import sys
+from pathlib import Path
+
+# Add components to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 st.set_page_config(page_title="Jobs | Elite Wall Pro", page_icon="📋", layout="wide")
+
+# CRITICAL: Hide Streamlit defaults FIRST
+st.markdown(
+    """
+    <style>
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
+        header { visibility: hidden !important; }
+        [data-testid="stSidebarNav"] { display: none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
+# Import shared styles and sidebar
+from components.shared_styles import get_professional_css
 from components.sidebar import render_sidebar
 
+# Get branding
 tenant = st.session_state.get("tenant", {})
 branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
-render_sidebar(branding)
-
-# Professional SaaS Color Palette
 primary_color = branding.get("primary_color", "#6366F1")
 
+# CRITICAL: Apply CSS BEFORE rendering sidebar
+st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
+
+# Additional Jobs page-specific CSS
 st.markdown(
     f"""
     <style>
-    /* ===== Professional Color Palette ===== */
-    :root {{
-        --primary-500: #6366F1;
-        --primary-600: #4F46E5;
-        --gray-50: #F8FAFC;
-        --gray-100: #F1F5F9;
-        --gray-200: #E2E8F0;
-        --gray-300: #CBD5E1;
-        --gray-600: #475569;
-        --gray-700: #334155;
-        --gray-900: #0F172A;
-        --success: #10B981;
-        --success-light: #D1FAE5;
-        --danger: #EF4444;
-        
-        /* Sidebar Colors */
-        --sidebar-bg-start: #1E293B;
-        --sidebar-bg-mid: #334155;
-        --sidebar-bg-end: #475569;
-    }}
-    
-    /* ===== Global Foundation ===== */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    html, body, [class*="css"] {{
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: var(--gray-50);
-        color: var(--gray-900);
-    }}
-
-    .block-container {{
-        padding-top: 2rem !important;
-        padding-bottom: 3rem !important;
-        padding-left: 3rem !important;
-        padding-right: 3rem !important;
-        max-width: 1400px !important;
-    }}
-
-    /* ===== SIDEBAR STYLING (Critical for alignment with app.py) ===== */
-    [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-mid) 50%, var(--sidebar-bg-end) 100%);
-        border-right: 1px solid rgba(255, 255, 255, 0.06);
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
-    }}
-
-    [data-testid="stSidebar"] > div:first-child {{
-        background: transparent;
-        padding-top: 0.5rem;
-    }}
-
-    /* Sidebar Logo */
-    .sidebar-logo {{
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 16px 16px 12px 16px;
-        margin: 0;
-    }}
-
-    .sidebar-logo-icon {{
-        background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-        flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    }}
-
-    .sidebar-logo-text {{
-        color: #ffffff;
-        font-size: 1.2rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }}
-
-    /* Sidebar User Pill */
-    .ewp-user-pill {{
-        background: rgba(255, 255, 255, 0.08);
-        padding: 12px 14px;
-        border-radius: 10px;
-        margin: 0 12px 20px 12px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-    }}
-
-    .ewp-user-avatar {{
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.2rem;
-    }}
-
-    .ewp-user-name {{
-        font-weight: 700;
-        color: #ffffff;
-        font-size: 0.95rem;
-        margin-bottom: 2px;
-    }}
-
-    .ewp-user-role {{
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-    }}
-
-    /* Sidebar Navigation Buttons */
-    [data-testid="stSidebar"] .stButton {{
-        margin-bottom: 6px;
-    }}
-
-    [data-testid="stSidebar"] .stButton > button {{
-        width: 100%;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        color: rgba(255, 255, 255, 0.9);
-        text-align: left;
-        padding: 12px 16px;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        height: auto;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 10px;
-    }}
-
-    [data-testid="stSidebar"] .stButton > button::after {{
-        content: '';
-        margin-left: auto;
-        width: 0;
-        height: 0;
-        border-top: 4px solid transparent;
-        border-bottom: 4px solid transparent;
-        border-left: 5px solid rgba(255, 255, 255, 0.4);
-        transition: all 0.2s ease;
-    }}
-
-    [data-testid="stSidebar"] .stButton > button:hover {{
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.15);
-        transform: translateX(2px);
-    }}
-
-    [data-testid="stSidebar"] .stButton > button:hover::after {{
-        border-left-color: rgba(255, 255, 255, 0.9);
-    }}
-
-    /* Sidebar Admin Section */
-    .admin-section-title {{
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        padding: 8px 12px;
-        margin-bottom: 6px;
-    }}
-
-    /* Sidebar Logout */
-    .logout-section {{
-        margin-top: auto;
-        padding: 16px 12px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }}
-
-    .logout-section .stButton > button {{
-        background: rgba(239, 68, 68, 0.12);
-        border-color: rgba(239, 68, 68, 0.2);
-        color: #FCA5A5;
-    }}
-
-    .logout-section .stButton > button::after {{
-        display: none;
-    }}
-
-    .logout-section .stButton > button:hover {{
-        background: rgba(239, 68, 68, 0.2);
-        border-color: rgba(239, 68, 68, 0.3);
-        color: #ffffff;
-    }}
-
-    /* Sidebar Footer */
-    .ewp-footer {{
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 0.75rem;
-        padding: 16px 12px 8px 12px;
-        text-align: center;
-    }}
-
-    [data-testid="stSidebar"] hr {{
-        margin: 16px 12px;
-        border-color: rgba(255, 255, 255, 0.1);
-        opacity: 0.6;
-    }}
-    /* ===== END SIDEBAR STYLING ===== */
-
-    /* ===== Page Header ===== */
-    .page-header {{
-        margin-bottom: 2.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--gray-200);
-    }}
-
-    .page-title {{
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--gray-900);
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.03em;
-        line-height: 1.2;
-    }}
-
     /* ===== Tabs Enhancement ===== */
     .stTabs [data-baseweb="tab-list"] {{
         gap: 8px;
@@ -359,74 +156,7 @@ st.markdown(
         color: var(--gray-600);
     }}
 
-    /* ===== Metrics in Expander ===== */
-    [data-testid="stMetric"] {{
-        background: #ffffff;
-        padding: 16px;
-        border-radius: 8px;
-        border: 1px solid var(--gray-200);
-    }}
-
-    [data-testid="stMetric"] label {{
-        font-size: 0.875rem !important;
-        font-weight: 500 !important;
-        color: var(--gray-600) !important;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }}
-
-    [data-testid="stMetric"] [data-testid="stMetricValue"] {{
-        font-size: 1.5rem !important;
-        font-weight: 700 !important;
-        color: var(--gray-900) !important;
-    }}
-
-    /* ===== Buttons ===== */
-    .stButton > button {{
-        border-radius: 8px;
-        height: 44px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        border: 1px solid transparent;
-        transition: all 0.2s ease;
-    }}
-
-    .stButton > button:hover {{
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }}
-
-    .stButton > button[kind="primary"] {{
-        background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%) !important;
-        border: none !important;
-        color: #ffffff !important;
-        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
-    }}
-
-    .stButton > button[kind="primary"]:hover {{
-        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-    }}
-
-    .stButton > button[kind="secondary"] {{
-        background: #ffffff !important;
-        border: 1px solid var(--gray-300) !important;
-        color: var(--gray-700) !important;
-    }}
-
-    .stButton > button[kind="secondary"]:hover {{
-        background: var(--gray-50) !important;
-        border-color: var(--gray-600) !important;
-    }}
-
     /* ===== Form Sections ===== */
-    .form-section {{
-        background: #ffffff;
-        padding: 24px;
-        border-radius: 10px;
-        border: 1px solid var(--gray-200);
-        margin-bottom: 20px;
-    }}
-
     .form-section-title {{
         font-size: 1.1rem;
         font-weight: 600;
@@ -436,24 +166,13 @@ st.markdown(
         border-bottom: 1px solid var(--gray-200);
     }}
 
-    /* ===== Number Inputs ===== */
-    .stNumberInput > div > div > input {{
-        border-radius: 8px;
-        border: 1px solid var(--gray-200);
-        padding: 12px 16px;
-    }}
-
-    /* ===== Text Areas ===== */
-    .stTextArea > div > div > textarea {{
-        border-radius: 8px;
-        border: 1px solid var(--gray-200);
-        padding: 12px 16px;
-    }}
-
-    /* ===== Date Inputs ===== */
+    /* ===== Number/Text/Date Inputs ===== */
+    .stNumberInput > div > div > input,
+    .stTextArea > div > div > textarea,
     .stDateInput > div > div > input {{
         border-radius: 8px;
         border: 1px solid var(--gray-200);
+        padding: 12px 16px;
     }}
 
     /* ===== Empty State ===== */
@@ -498,22 +217,13 @@ st.markdown(
         color: var(--gray-900);
         font-weight: 600;
     }}
-
-    /* ===== Responsive ===== */
-    @media (max-width: 768px) {{
-        .block-container {{
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }}
-        
-        .page-title {{
-            font-size: 1.75rem;
-        }}
-    }}
     </style>
     """,
     unsafe_allow_html=True,
 )
+
+# NOW render sidebar (after CSS is loaded)
+render_sidebar(branding)
 
 # Header
 st.markdown("""
