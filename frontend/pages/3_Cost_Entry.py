@@ -5,11 +5,24 @@ from datetime import date, timedelta
 
 st.set_page_config(page_title="Cost Entry | Elite Wall Pro", page_icon="💰", layout="wide")
 
+st.markdown(
+    """
+    <style>
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
+        header { visibility: hidden !important; }
+        [data-testid="stSidebarNav"] { display: none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
 from components.sidebar import render_sidebar
+from components.shared_styles import get_professional_css
 
 tenant = st.session_state.get("tenant", {})
 branding = tenant.get("branding", {"primary_color": "#2CA01C", "company_name": "Elite Wall Pro"})
@@ -17,7 +30,7 @@ render_sidebar(branding)
 
 # Enhanced Global UI Styling
 primary_color = branding.get("primary_color", "#2CA01C")
-
+st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
 st.markdown(
     f"""
     <style>
@@ -343,7 +356,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
+render_sidebar(branding)
 # Header
 st.markdown("""
 <div class='page-header'>

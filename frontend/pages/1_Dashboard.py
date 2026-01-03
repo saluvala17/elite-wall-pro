@@ -6,18 +6,30 @@ import pandas as pd
 
 st.set_page_config(page_title="Dashboard | Elite Wall Pro", page_icon="📊", layout="wide")
 
+st.markdown(
+    """
+    <style>
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
+        header { visibility: hidden !important; }
+        [data-testid="stSidebarNav"] { display: none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # Check auth
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
 from components.sidebar import render_sidebar
-
+from components.shared_styles import get_professional_css
+   
 # Get branding
 tenant = st.session_state.get("tenant", {})
 branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
+st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
 
-render_sidebar(branding)
 
 # Professional SaaS Color Palette
 primary_color = branding.get("primary_color", "#6366F1")
@@ -239,7 +251,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
+render_sidebar(branding)
 # Enhanced Header
 st.markdown(f"""
 <div class='page-header'>
