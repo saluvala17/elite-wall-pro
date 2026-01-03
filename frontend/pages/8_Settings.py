@@ -1,24 +1,115 @@
-"""Settings Page"""
+"""Settings Page - Professional SaaS Colors"""
 import streamlit as st
+import sys
+from pathlib import Path
+
+# Add components to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 st.set_page_config(page_title="Settings | Elite Wall Pro", page_icon="⚙️", layout="wide")
+
+# CRITICAL: Hide Streamlit defaults FIRST
+st.markdown(
+    """
+    <style>
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
+        header { visibility: hidden !important; }
+        [data-testid="stSidebarNav"] { display: none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
+# Import shared styles and sidebar
+from components.shared_styles import get_professional_css
 from components.sidebar import render_sidebar
 
+# Get branding
 tenant = st.session_state.get("tenant", {})
-branding = tenant.get("branding", {"primary_color": "#4A7C59", "company_name": "Elite Wall Pro"})
+branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
+primary_color = branding.get("primary_color", "#6366F1")
+
+# CRITICAL: Apply CSS BEFORE rendering sidebar
+st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
+
+# Additional Settings page-specific CSS
+st.markdown(
+    f"""
+    <style>
+    /* ===== Tabs Enhancement ===== */
+    .stTabs [data-baseweb="tab-list"] {{
+        gap: 8px;
+        background-color: #ffffff;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid var(--gray-200);
+    }}
+
+    .stTabs [data-baseweb="tab"] {{
+        height: 44px;
+        padding: 0 24px;
+        background-color: transparent;
+        border-radius: 6px;
+        color: var(--gray-600);
+        font-weight: 600;
+        border: none;
+    }}
+
+    .stTabs [aria-selected="true"] {{
+        background-color: var(--primary-500) !important;
+        color: #ffffff !important;
+    }}
+
+    /* ===== Subheaders ===== */
+    h3 {{
+        color: var(--gray-900) !important;
+        font-weight: 700 !important;
+        margin-bottom: 1.5rem !important;
+    }}
+
+    /* ===== Input Fields ===== */
+    .stTextInput > div > div > input {{
+        border-radius: 8px;
+        border: 1px solid var(--gray-200);
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }}
+
+    .stTextInput > div > div > input:focus {{
+        border-color: var(--primary-500);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }}
+
+    /* ===== Color Picker ===== */
+    .stColorPicker > div > div {{
+        border-radius: 8px;
+        border: 1px solid var(--gray-200);
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# NOW render sidebar (after all CSS is loaded)
 render_sidebar(branding)
 
+# Header
+st.markdown("""
+<div class='page-header'>
+    <div class='page-title'>⚙️ Settings</div>
+</div>
+""", unsafe_allow_html=True)
+
+# Admin check
 user = st.session_state.get("user", {})
 if user.get("role") not in ("admin", "super_admin"):
     st.error("Admin access required")
     st.stop()
-
-st.title("⚙️ Settings")
 
 api = st.session_state.api_client
 
@@ -31,8 +122,8 @@ with tab1:
     
     with st.form("branding_form"):
         company_name = st.text_input("Company Name", value=current_branding.get("company_name", ""))
-        primary_color = st.color_picker("Primary Color", value=current_branding.get("primary_color", "#4A7C59"))
-        secondary_color = st.color_picker("Secondary Color", value=current_branding.get("secondary_color", "#8B4513"))
+        primary_color = st.color_picker("Primary Color", value=current_branding.get("primary_color", "#6366F1"))
+        secondary_color = st.color_picker("Secondary Color", value=current_branding.get("secondary_color", "#4F46E5"))
         logo_url = st.text_input("Logo URL", value=current_branding.get("logo_url", "") or "")
         
         if st.form_submit_button("Save Branding", type="primary"):

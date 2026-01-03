@@ -3,81 +3,49 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
+import sys
+from pathlib import Path
+
+# Add components to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 st.set_page_config(page_title="Dashboard | Elite Wall Pro", page_icon="📊", layout="wide")
+
+# CRITICAL: Hide Streamlit defaults FIRST
+st.markdown(
+    """
+    <style>
+        #MainMenu { visibility: hidden !important; }
+        footer { visibility: hidden !important; }
+        header { visibility: hidden !important; }
+        [data-testid="stSidebarNav"] { display: none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Check auth
 if not st.session_state.get("authenticated"):
     st.switch_page("app.py")
     st.stop()
 
+# Import shared styles and sidebar
+from components.shared_styles import get_professional_css
 from components.sidebar import render_sidebar
 
 # Get branding
 tenant = st.session_state.get("tenant", {})
 branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
-
-render_sidebar(branding)
-
-# Professional SaaS Color Palette
 primary_color = branding.get("primary_color", "#6366F1")
 
+# CRITICAL: Apply CSS BEFORE rendering sidebar
+st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
+
+# Additional Dashboard page-specific CSS
 st.markdown(
     f"""
     <style>
-    /* ===== Professional Color Palette ===== */
-    :root {{
-        --primary-500: #6366F1;
-        --gray-50: #F8FAFC;
-        --gray-200: #E2E8F0;
-        --gray-300: #CBD5E1;
-        --gray-600: #475569;
-        --gray-900: #0F172A;
-        --success: #10B981;
-        --warning: #F59E0B;
-    }}
-    
-    /* ===== Global Foundation ===== */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    html, body, [class*="css"] {{
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: var(--gray-50);
-        color: var(--gray-900);
-    }}
-
-    .block-container {{
-        padding-top: 2rem !important;
-        padding-bottom: 3rem !important;
-        padding-left: 3rem !important;
-        padding-right: 3rem !important;
-        max-width: 1400px !important;
-    }}
-
-    /* ===== Page Header ===== */
-    .page-header {{
-        margin-bottom: 2.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid var(--gray-200);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }}
-
-    .page-title {{
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--gray-900);
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.03em;
-    }}
-
-    .page-subtitle {{
-        font-size: 1rem;
-        color: var(--gray-600);
-        font-weight: 500;
-    }}
-
+    /* ===== Export Button ===== */
     .export-button {{
         background: #ffffff;
         border: 1px solid var(--gray-300);
@@ -93,45 +61,6 @@ st.markdown(
     .export-button:hover {{
         background: var(--gray-50);
         border-color: var(--gray-600);
-    }}
-
-    /* ===== Cards ===== */
-    .card {{
-        background: #ffffff;
-        padding: 24px;
-        border-radius: 12px;
-        border: 1px solid var(--gray-200);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        margin-bottom: 24px;
-    }}
-
-    /* ===== KPI Cards ===== */
-    [data-testid="stMetric"] {{
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        border: 1px solid var(--gray-200);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        transition: all 0.2s ease;
-    }}
-
-    [data-testid="stMetric"]:hover {{
-        border-color: {primary_color}40;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
-    }}
-
-    [data-testid="stMetric"] label {{
-        font-size: 0.8rem !important;
-        font-weight: 600 !important;
-        color: var(--gray-600) !important;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-    }}
-
-    [data-testid="stMetric"] [data-testid="stMetricValue"] {{
-        font-size: 2rem !important;
-        font-weight: 700 !important;
-        color: var(--gray-900) !important;
     }}
 
     /* ===== Section Headers ===== */
@@ -158,7 +87,7 @@ st.markdown(
     }}
 
     .job-table-row:hover {{
-        border-color: {primary_color}40;
+        border-color: rgba(99, 102, 241, 0.4);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     }}
 
@@ -193,44 +122,12 @@ st.markdown(
     }}
 
     .profit-negative {{
-        color: #EF4444;
+        color: var(--danger);
         font-weight: 600;
-    }}
-
-    /* ===== Empty State ===== */
-    .empty-state {{
-        text-align: center;
-        padding: 60px 30px;
-        background: #ffffff;
-        border-radius: 12px;
-        border: 2px dashed var(--gray-300);
-    }}
-
-    .empty-state-icon {{
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }}
-
-    .empty-state-title {{
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--gray-900);
-        margin-bottom: 0.5rem;
-    }}
-
-    .empty-state-text {{
-        color: var(--gray-600);
-        margin-bottom: 0.5rem;
     }}
 
     /* ===== Responsive ===== */
     @media (max-width: 768px) {{
-        .block-container {{
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }}
-        
         .job-table-row {{
             grid-template-columns: 1fr;
         }}
@@ -239,6 +136,9 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+# NOW render sidebar (after all CSS is loaded)
+render_sidebar(branding)
 
 # Enhanced Header
 st.markdown(f"""
