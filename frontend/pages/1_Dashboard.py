@@ -28,12 +28,11 @@ from components.shared_styles import get_professional_css
 # Get branding
 tenant = st.session_state.get("tenant", {})
 branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
-
-# CRITICAL: Define primary_color BEFORE using it
-primary_color = branding.get("primary_color", "#6366F1")
-
-# Apply shared CSS
 st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
+
+
+# Professional SaaS Color Palette
+primary_color = branding.get("primary_color", "#6366F1")
 
 st.markdown(
     f"""
