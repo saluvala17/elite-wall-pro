@@ -517,8 +517,8 @@ def render_enhanced_sidebar(branding):
         if st.button("🏠  Dashboard", key="nav_home", use_container_width=True):
             st.switch_page("app.py")
         
-        if st.button("📊  Analytics", key="nav_dashboard", use_container_width=True):
-            st.switch_page("pages/1_Dashboard.py")
+        # if st.button("📊  Analytics", key="nav_dashboard", use_container_width=True):
+        #     st.switch_page("pages/1_Dashboard.py")
         
         if st.button("📋  Jobs", key="nav_jobs", use_container_width=True):
             st.switch_page("pages/2_Jobs.py")
