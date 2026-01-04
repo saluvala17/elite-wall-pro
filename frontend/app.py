@@ -1,13 +1,12 @@
 """
-Elite Wall Pro - Production Dashboard
-Pure Streamlit Components - Maximum Reliability
+Elite Wall Pro - Professional Dashboard
+Fixed: Proper rendering, matching sidebar colors
 """
 
 import streamlit as st
 import sys
 from pathlib import Path
 import plotly.graph_objects as go
-from datetime import datetime
 
 # Add components to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -22,24 +21,29 @@ from components.shared_styles import get_professional_css
 # Page Configuration
 # --------------------------------------------------
 st.set_page_config(
-    page_title="Elite Wall Pro - Dashboard",
+    page_title="Elite Wall Pro",
     page_icon="🏗️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Hide Streamlit defaults
-st.markdown("""
+# --------------------------------------------------
+# Hide Streamlit Defaults
+# --------------------------------------------------
+st.markdown(
+    """
     <style>
         #MainMenu { visibility: hidden; }
         footer { visibility: hidden; }
         header { visibility: hidden; }
         [data-testid="stSidebarNav"] { display: none; }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 # --------------------------------------------------
-# Session State
+# Session State Initialization
 # --------------------------------------------------
 if "api_client" not in st.session_state:
     st.session_state.api_client = APIClient(settings.api_url)
@@ -55,10 +59,9 @@ if "tenant" not in st.session_state:
 
 
 # --------------------------------------------------
-# Helper Functions
+# Branding Helper
 # --------------------------------------------------
 def get_branding():
-    """Get tenant branding"""
     tenant = st.session_state.get("tenant") or {}
     if tenant:
         branding = tenant.get("branding", {})
@@ -74,24 +77,170 @@ def get_branding():
     }
 
 
+# --------------------------------------------------
+# Dashboard-Specific CSS
+# --------------------------------------------------
+def apply_dashboard_styles():
+    st.markdown(
+        """
+        <style>
+        /* Dashboard specific overrides */
+        
+        /* Header */
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 0.25rem;
+        }
+        
+        .dashboard-subtitle {
+            font-size: 0.875rem;
+            color: #64748B;
+            margin-bottom: 2rem;
+        }
+        
+        /* Section Titles */
+        h3 {
+            font-size: 1.125rem !important;
+            font-weight: 700 !important;
+            color: #0F172A !important;
+            margin-top: 2rem !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        /* KPI Cards - Match design exactly */
+        [data-testid="stMetric"] {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            min-height: 110px;
+        }
+        
+        [data-testid="stMetric"] label {
+            font-size: 0.6875rem !important;
+            font-weight: 600 !important;
+            color: #64748B !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+        }
+        
+        [data-testid="stMetric"] [data-testid="stMetricValue"] {
+            font-size: 1.875rem !important;
+            font-weight: 700 !important;
+            color: #0F172A !important;
+        }
+        
+        /* Alert Badges */
+        .alert-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            margin-right: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .badge-danger {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+        
+        .badge-warning {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+        
+        /* Job Card Container */
+        .job-card-container {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        .job-card-container:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+        
+        /* Quick Actions Panel */
+        .qa-panel {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .qa-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 1rem;
+        }
+        
+        /* Quick Action Buttons */
+        div[data-testid="column"] .stButton > button {
+            width: 100% !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+            font-size: 0.875rem !important;
+            padding: 0.625rem 1rem !important;
+            margin-bottom: 0.5rem !important;
+            transition: all 0.2s ease !important;
+        }
+        
+        /* Primary button (New Job) */
+        .stButton > button[kind="primary"] {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+            color: white !important;
+            border: none !important;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+        
+        .chart-title {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# --------------------------------------------------
+# Helper Functions
+# --------------------------------------------------
 def calculate_total_budget(job):
     """Calculate total budget from all budget fields"""
-    try:
-        return sum([
-            float(job.get("budget_insurance", 0) or 0),
-            float(job.get("budget_labor", 0) or 0),
-            float(job.get("budget_stamps", 0) or 0),
-            float(job.get("budget_material", 0) or 0),
-            float(job.get("budget_subs_bond", 0) or 0),
-            float(job.get("budget_equipment", 0) or 0)
-        ])
-    except Exception as e:
-        st.error(f"Error calculating budget: {e}")
-        return 0
+    return sum([
+        float(job.get("budget_insurance", 0) or 0),
+        float(job.get("budget_labor", 0) or 0),
+        float(job.get("budget_stamps", 0) or 0),
+        float(job.get("budget_material", 0) or 0),
+        float(job.get("budget_subs_bond", 0) or 0),
+        float(job.get("budget_equipment", 0) or 0)
+    ])
 
 
 def get_job_total_costs(api, job_id):
-    """Get actual total costs for a job from weekly_costs"""
+    """Get actual total costs for a job"""
     try:
         totals = api.get_cost_totals(job_id)
         if totals and totals.get("actual"):
@@ -104,68 +253,72 @@ def get_job_total_costs(api, job_id):
                 float(actual.get("subs_bond", 0) or 0),
                 float(actual.get("equipment", 0) or 0)
             ])
-    except Exception as e:
-        # Silent fail - return 0 if API call fails
+    except:
         pass
     return 0
 
 
-def apply_custom_css():
-    """Apply minimal custom CSS for polish"""
-    st.markdown("""
-    <style>
-    /* Clean typography */
-    h1, h2, h3 { 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-        font-weight: 700 !important;
-    }
+def render_job_card(job, budget, actual, contract, is_over_budget):
+    """Render a single job card using Streamlit columns"""
     
-    /* Metric cards */
-    [data-testid="stMetric"] {
-        background: white;
-        padding: 1.25rem;
-        border-radius: 8px;
-        border: 1px solid #E2E8F0;
-    }
+    # Calculate values
+    progress_pct = (actual / budget * 100) if budget > 0 else 0
+    margin = ((contract - actual) / contract * 100) if contract > 0 else 0
+    border_color = "#DC2626" if is_over_budget else "#10B981"
     
-    /* Alert badges */
-    .alert-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        font-size: 0.875rem;
-        font-weight: 600;
-        display: inline-block;
-        margin: 0.5rem 0.5rem 1rem 0;
-    }
-    
-    .badge-danger {
-        background: #FEE2E2;
-        color: #DC2626;
-    }
-    
-    .badge-warning {
-        background: #FEF3C7;
-        color: #D97706;
-    }
-    
-    /* Job cards */
-    .job-card {
-        background: white;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-    }
-    
-    .job-card-over-budget {
-        border-left: 4px solid #DC2626;
-    }
-    
-    .job-card-on-track {
-        border-left: 4px solid #10B981;
-    }
-    </style>
+    # Create card with border
+    st.markdown(f"""
+    <div style="border-left: 4px solid {border_color}; padding-left: 0;">
     """, unsafe_allow_html=True)
+    
+    # Create 3-column layout
+    col1, col2, col3 = st.columns([2, 1.2, 1])
+    
+    with col1:
+        st.markdown(f"**{job.get('job_name', 'Untitled Job')}**")
+        st.caption(f"#{job.get('job_number', 'N/A')} · {job.get('customer_name', 'No customer')}")
+        
+        st.write("")
+        st.caption("BUDGET")
+        st.markdown(f"**${budget:,.0f}**")
+        
+        # Progress bar
+        progress_color = "#DC2626" if is_over_budget else "#10B981"
+        st.markdown(f"""
+        <div style="width: 100%; background: #F1F5F9; height: 6px; border-radius: 3px; margin-top: 0.5rem;">
+            <div style="width: {min(progress_pct, 100):.1f}%; background: {progress_color}; height: 100%; border-radius: 3px;"></div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.caption("ACTUAL")
+        st.markdown(f"### $ {actual:,.0f}")
+        
+        if is_over_budget:
+            st.markdown("""
+            <div style="background: #FEE2E2; color: #DC2626; padding: 0.25rem 0.75rem; 
+                        border-radius: 4px; font-size: 0.6875rem; font-weight: 600; 
+                        display: inline-block; margin-top: 0.5rem;">
+                ⚠️ Over Budget
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+            <div style="background: #D1FAE5; color: #059669; padding: 0.25rem 0.75rem; 
+                        border-radius: 4px; font-size: 0.6875rem; font-weight: 600; 
+                        display: inline-block; margin-top: 0.5rem;">
+                ✓ {margin:.1f}% margin
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.caption("Last cost: 3 days ago")
+    
+    with col3:
+        st.caption("ACTUAL")
+        st.markdown(f"### $ {actual:,.0f}")
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin: 0.75rem 0; border: none; border-top: 1px solid #E2E8F0;'>", unsafe_allow_html=True)
 
 
 # --------------------------------------------------
@@ -180,28 +333,30 @@ def main():
     branding = get_branding()
     primary_color = branding.get("primary_color", "#6366F1")
     
-    # Apply styles
+    # Apply shared styles first
     st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
-    apply_custom_css()
+    
+    # Apply dashboard-specific styles
+    apply_dashboard_styles()
 
     # Render sidebar
     render_sidebar(branding)
 
     # Header
-    col_title, col_actions = st.columns([3, 1])
+    header_col1, header_col2 = st.columns([3, 1])
     
-    with col_title:
-        st.title("Dashboard")
-        st.caption(f"{branding['company_name']} • Job Costing Overview")
+    with header_col1:
+        st.markdown(f"""
+        <div class="dashboard-title">Dashboard</div>
+        <div class="dashboard-subtitle">{branding["company_name"]} • Job Costing Overview</div>
+        """, unsafe_allow_html=True)
     
-    with col_actions:
+    with header_col2:
         btn1, btn2 = st.columns(2)
         with btn1:
             st.button("📥 Export", key="export_btn", use_container_width=True)
         with btn2:
             st.button("📅 Date Range", key="date_btn", use_container_width=True)
-
-    st.write("")
 
     api = st.session_state.api_client
 
@@ -211,55 +366,40 @@ def main():
 
         if not jobs:
             st.info("📋 No jobs yet. Create your first job to get started.")
-            if st.button("➕ Create First Job", type="primary"):
-                st.switch_page("pages/2_Jobs.py")
             return
 
-        # Filter active jobs only
         active_jobs = [j for j in jobs if j.get("status") == "active"]
         
-        if not active_jobs:
-            st.warning("No active jobs found. All jobs may be completed or inactive.")
-            return
-        
-        # Calculate all costs upfront
-        job_costs = {}
-        job_budgets = {}
-        
-        for job in active_jobs:
-            job_id = job["id"]
-            job_costs[job_id] = get_job_total_costs(api, job_id)
-            job_budgets[job_id] = calculate_total_budget(job)
-        
-        # Calculate financial metrics
+        # Calculate metrics
         total_contract = sum(float(j.get("contract_amount") or 0) for j in active_jobs)
+        
+        job_costs = {}
+        for job in active_jobs:
+            job_costs[job["id"]] = get_job_total_costs(api, job["id"])
+        
         total_costs = sum(job_costs.values())
         total_margin = ((total_contract - total_costs) / total_contract * 100) if total_contract > 0 else 0
         
-        # Identify problem jobs
+        # Calculate alerts
         over_budget_jobs = []
         near_threshold_jobs = []
         
         for job in active_jobs:
             job_id = job["id"]
-            budget = job_budgets[job_id]
-            actual = job_costs[job_id]
+            budget = calculate_total_budget(job)
+            actual = job_costs.get(job_id, 0)
             contract = float(job.get("contract_amount") or 0)
             
-            # Over budget check
             if budget > 0 and actual > budget:
                 over_budget_jobs.append(job)
             
-            # Near threshold check (margin < 10%)
             if contract > 0:
                 margin = ((contract - actual) / contract * 100)
-                if 0 <= margin < 10 and actual > 0:
+                if 0 <= margin < 10:
                     near_threshold_jobs.append(job)
 
-        # ============================================
-        # FINANCIAL SNAPSHOT
-        # ============================================
-        st.subheader("Financial Snapshot")
+        # Financial Snapshot
+        st.markdown("### Financial Snapshot")
         
         m1, m2, m3, m4 = st.columns(4)
         
@@ -288,85 +428,32 @@ def main():
             
             st.markdown(badge_html, unsafe_allow_html=True)
 
-        st.write("")
-
-        # ============================================
-        # MAIN LAYOUT: JOBS + QUICK ACTIONS
-        # ============================================
+        # Main Layout
         col_jobs, col_qa = st.columns([2.5, 1], gap="large")
 
         with col_jobs:
-            st.subheader("Active Jobs")
+            st.markdown("### Active Jobs")
             
-            # Display each job as a card
+            st.markdown('<div class="job-card-container">', unsafe_allow_html=True)
+            
             for job in active_jobs:
                 job_id = job["id"]
-                job_name = job.get("job_name", "Untitled Job")
-                job_number = job.get("job_number", "N/A")
-                customer_name = job.get("customer_name", "No customer")
-                
-                budget = job_budgets[job_id]
-                actual = job_costs[job_id]
+                budget = calculate_total_budget(job)
+                actual = job_costs.get(job_id, 0)
                 contract = float(job.get("contract_amount") or 0)
-                
-                # Calculate progress and status
-                progress = (actual / budget) if budget > 0 else 0
                 is_over_budget = actual > budget if budget > 0 else False
                 
-                if contract > 0 and actual > 0:
-                    margin = ((contract - actual) / contract * 100)
-                else:
-                    margin = 0
-                
-                # Card container
-                card_class = "job-card-over-budget" if is_over_budget else "job-card-on-track"
-                
-                with st.container():
-                    st.markdown(f'<div class="job-card {card_class}">', unsafe_allow_html=True)
-                    
-                    # Job header
-                    st.markdown(f"**{job_name}**")
-                    st.caption(f"#{job_number} · {customer_name}")
-                    
-                    # Three columns for details
-                    detail_col1, detail_col2, detail_col3 = st.columns([2, 1.5, 1])
-                    
-                    with detail_col1:
-                        st.caption("BUDGET")
-                        st.markdown(f"**${budget:,.0f}**")
-                        
-                        # Progress bar
-                        if budget > 0:
-                            progress_pct = min(progress * 100, 100)
-                            progress_color = "#DC2626" if is_over_budget else "#10B981"
-                            st.progress(progress, text=f"{progress_pct:.0f}% used")
-                    
-                    with detail_col2:
-                        st.caption("ACTUAL")
-                        st.markdown(f"### ${actual:,.0f}")
-                        
-                        # Status badge
-                        if is_over_budget:
-                            st.error("⚠️ Over Budget", icon="🚨")
-                        elif margin > 0:
-                            st.success(f"✓ {margin:.1f}% margin", icon="✅")
-                        
-                        st.caption("Last cost: 3 days ago")
-                    
-                    with detail_col3:
-                        st.caption("CONTRACT")
-                        st.markdown(f"**${contract:,.0f}**")
-                        
-                        if contract > 0:
-                            completion = (actual / contract * 100) if contract > 0 else 0
-                            st.caption(f"{completion:.0f}% complete")
-                    
-                    st.markdown('</div>', unsafe_allow_html=True)
-                    st.write("")
+                render_job_card(job, budget, actual, contract, is_over_budget)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
 
         with col_qa:
-            # Quick Actions Panel
-            st.subheader("Quick Actions")
+            # Quick Actions
+            st.markdown("""
+            <div class="qa-panel">
+                <div class="qa-title">Quick Actions</div>
+            </div>
+            """, unsafe_allow_html=True)
             
             if st.button("➕ New Job", type="primary", use_container_width=True, key="qa_new"):
                 st.switch_page("pages/2_Jobs.py")
@@ -380,90 +467,41 @@ def main():
             if st.button("📊 View Reports", use_container_width=True, key="qa_reports"):
                 st.switch_page("pages/6_Reports.py")
             
-            st.write("")
-            st.write("")
+            # Chart
+            st.markdown("""
+            <div class="chart-container">
+                <div class="chart-title">Budget vs Actual (Top 5)</div>
+            </div>
+            """, unsafe_allow_html=True)
             
-            # Budget vs Actual Chart
-            st.caption("BUDGET VS ACTUAL (TOP 5)")
-            
-            # Get top 5 jobs by contract value
             top_5 = sorted(active_jobs, key=lambda x: float(x.get("contract_amount") or 0), reverse=True)[:5]
             
             if top_5:
-                labels = []
-                budgets = []
-                actuals = []
-                
-                for job in top_5:
-                    labels.append(job.get("job_number", "")[:10])
-                    budgets.append(job_budgets[job["id"]])
-                    actuals.append(job_costs[job["id"]])
+                labels = [j.get("job_number", "")[:8] for j in top_5]
+                budgets = [calculate_total_budget(j) for j in top_5]
+                actuals = [job_costs.get(j["id"], 0) for j in top_5]
                 
                 fig = go.Figure(data=[
-                    go.Bar(
-                        name='Budget',
-                        x=labels,
-                        y=budgets,
-                        marker_color='#CBD5E1',
-                        width=0.35
-                    ),
-                    go.Bar(
-                        name='Actual',
-                        x=labels,
-                        y=actuals,
-                        marker_color='#10B981',
-                        width=0.35
-                    )
+                    go.Bar(name='Budget', x=labels, y=budgets, marker_color='#CBD5E1', width=0.35),
+                    go.Bar(name='Actual', x=labels, y=actuals, marker_color='#10B981', width=0.35)
                 ])
                 
                 fig.update_layout(
                     barmode='group',
                     height=280,
                     margin=dict(l=10, r=10, t=10, b=40),
-                    showlegend=True,
-                    legend=dict(
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.02,
-                        xanchor="center",
-                        x=0.5,
-                        font=dict(size=10)
-                    ),
+                    showlegend=False,
                     plot_bgcolor='white',
-                    paper_bgcolor='white',
-                    xaxis=dict(
-                        showgrid=False,
-                        showline=True,
-                        linecolor='#E2E8F0',
-                        tickfont=dict(size=10, color='#64748B')
-                    ),
-                    yaxis=dict(
-                        showgrid=True,
-                        gridcolor='#F1F5F9',
-                        showline=False,
-                        tickfont=dict(size=10, color='#64748B'),
-                        tickformat='$,.0f'
-                    )
+                    xaxis=dict(showgrid=False, showline=True, linecolor='#E2E8F0', 
+                              tickfont=dict(size=10, color='#64748B')),
+                    yaxis=dict(showgrid=True, gridcolor='#F1F5F9', showline=False, 
+                              tickfont=dict(size=10, color='#64748B'))
                 )
                 
                 st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     except Exception as e:
         st.error(f"⚠️ Error loading dashboard: {str(e)}")
-        
-        # Debug info (remove in production)
-        with st.expander("Debug Information"):
-            st.code(f"""
-Error: {str(e)}
-
-Debug Info:
-- Jobs fetched: {len(jobs) if 'jobs' in locals() else 'N/A'}
-- Active jobs: {len(active_jobs) if 'active_jobs' in locals() else 'N/A'}
-- API client: {st.session_state.api_client}
-            """)
-        
-        if st.button("🔄 Retry"):
-            st.rerun()
 
 
 if __name__ == "__main__":
