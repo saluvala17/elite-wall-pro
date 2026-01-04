@@ -1,6 +1,6 @@
 """
 Elite Wall Pro - Professional Dashboard
-Fixed: Proper rendering, matching sidebar colors
+Enhanced: Industry-standard spacing, alignment, and visual hierarchy
 """
 
 import streamlit as st
@@ -78,44 +78,80 @@ def get_branding():
 
 
 # --------------------------------------------------
-# Dashboard-Specific CSS
+# Enhanced Dashboard CSS - Professional Spacing
 # --------------------------------------------------
 def apply_dashboard_styles():
     st.markdown(
         """
         <style>
-        /* Dashboard specific overrides */
+        /* ===== Professional Spacing System ===== */
         
-        /* Header */
+        /* Header Section */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        
         .dashboard-title {
             font-size: 2rem;
             font-weight: 700;
             color: #0F172A;
             margin-bottom: 0.25rem;
+            line-height: 1.2;
         }
         
         .dashboard-subtitle {
             font-size: 0.875rem;
             color: #64748B;
-            margin-bottom: 2rem;
+            line-height: 1.4;
         }
         
-        /* Section Titles */
-        h3 {
-            font-size: 1.125rem !important;
-            font-weight: 700 !important;
-            color: #0F172A !important;
-            margin-top: 2rem !important;
-            margin-bottom: 1rem !important;
+        /* Compact Action Buttons */
+        .action-btn-small {
+            padding: 0.5rem 0.875rem !important;
+            font-size: 0.8125rem !important;
+            height: 36px !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+            border: 1px solid #E2E8F0 !important;
+            background: white !important;
+            color: #64748B !important;
+            transition: all 0.2s ease !important;
         }
         
-        /* KPI Cards - Match design exactly */
+        .action-btn-small:hover {
+            border-color: #CBD5E1 !important;
+            background: #F8FAFC !important;
+            color: #334155 !important;
+        }
+        
+        /* Section Spacing - Tighter */
+        .section-header {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #0F172A;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+        
+        /* KPI Cards - Consistent Height */
         [data-testid="stMetric"] {
             background: white;
             padding: 1.25rem;
             border-radius: 8px;
             border: 1px solid #E2E8F0;
-            min-height: 110px;
+            min-height: 115px;
+            transition: all 0.2s ease;
+        }
+        
+        [data-testid="stMetric"]:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
         
         [data-testid="stMetric"] label {
@@ -132,15 +168,15 @@ def apply_dashboard_styles():
             color: #0F172A !important;
         }
         
-        /* Alert Badges */
+        /* Alert Badges - Compact */
         .alert-badge {
             display: inline-block;
-            padding: 0.5rem 1rem;
+            padding: 0.375rem 0.75rem;
             border-radius: 6px;
-            font-size: 0.8125rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            margin-right: 0.75rem;
-            margin-bottom: 1.5rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.75rem;
         }
         
         .badge-danger {
@@ -153,39 +189,68 @@ def apply_dashboard_styles():
             color: #D97706;
         }
         
-        /* Job Card Container */
-        .job-card-container {
+        /* Job Cards - Compact Professional Spacing */
+        .job-card {
             background: white;
             border: 1px solid #E2E8F0;
             border-radius: 8px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 0.75rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.5rem;
             transition: all 0.2s ease;
+            border-left-width: 3px;
         }
         
-        .job-card-container:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        .job-card:hover {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             transform: translateY(-1px);
+            border-color: #CBD5E1;
         }
         
-        /* Quick Actions Panel */
-        .qa-panel {
+        .job-card-over-budget {
+            border-left-color: #DC2626;
+        }
+        
+        .job-card-on-track {
+            border-left-color: #10B981;
+        }
+        
+        /* Search Bar Styling */
+        .search-container {
+            margin-bottom: 0.75rem;
+        }
+        
+        .search-container input {
+            border-radius: 8px !important;
+            border: 1px solid #E2E8F0 !important;
+            padding: 0.625rem 1rem !important;
+            font-size: 0.875rem !important;
+        }
+        
+        .search-container input:focus {
+            border-color: #6366F1 !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+        }
+        
+        /* Panel Sections - Professional Cards */
+        .panel-section {
             background: white;
             border: 1px solid #E2E8F0;
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             margin-bottom: 1rem;
         }
         
-        .qa-title {
-            font-size: 1rem;
+        .panel-title {
+            font-size: 0.875rem;
             font-weight: 700;
             color: #0F172A;
             margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
-        /* Quick Action Buttons */
-        div[data-testid="column"] .stButton > button {
+        /* Quick Action Buttons - Uniform Style */
+        .stButton > button {
             width: 100% !important;
             border-radius: 6px !important;
             font-weight: 600 !important;
@@ -193,17 +258,37 @@ def apply_dashboard_styles():
             padding: 0.625rem 1rem !important;
             margin-bottom: 0.5rem !important;
             transition: all 0.2s ease !important;
+            height: 42px !important;
         }
         
-        /* Primary button (New Job) */
+        /* Primary Button */
         .stButton > button[kind="primary"] {
             background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
             color: white !important;
             border: none !important;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2) !important;
+        }
+        
+        .stButton > button[kind="primary"]:hover {
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3) !important;
+            transform: translateY(-1px) !important;
+        }
+        
+        /* Secondary Buttons */
+        .stButton > button:not([kind="primary"]) {
+            background: white !important;
+            border: 1px solid #E2E8F0 !important;
+            color: #475569 !important;
+        }
+        
+        .stButton > button:not([kind="primary"]):hover {
+            background: #F8FAFC !important;
+            border-color: #CBD5E1 !important;
+            color: #0F172A !important;
         }
         
         /* Chart Container */
-        .chart-container {
+        .chart-section {
             background: white;
             border: 1px solid #E2E8F0;
             border-radius: 8px;
@@ -211,11 +296,97 @@ def apply_dashboard_styles():
         }
         
         .chart-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        /* Job Card Content Layout */
+        .job-header {
+            margin-bottom: 0.75rem;
+        }
+        
+        .job-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0F172A;
+            margin-bottom: 0.25rem;
+        }
+        
+        .job-meta {
             font-size: 0.8125rem;
+            color: #64748B;
+        }
+        
+        .budget-label {
+            font-size: 0.6875rem;
             font-weight: 600;
             color: #64748B;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+        
+        .budget-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #0F172A;
+        }
+        
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #F1F5F9;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .badge-over {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+        
+        .badge-success {
+            background: #D1FAE5;
+            color: #059669;
+        }
+        
+        /* Reduced Spacing Between Sections */
+        .section-divider {
+            height: 1rem;
+        }
+        
+        /* Compact Layout Utilities */
+        .mb-tight {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mb-normal {
+            margin-bottom: 0.75rem;
+        }
+        
+        .mb-loose {
             margin-bottom: 1rem;
         }
         </style>
@@ -259,66 +430,52 @@ def get_job_total_costs(api, job_id):
 
 
 def render_job_card(job, budget, actual, contract, is_over_budget):
-    """Render a single job card using Streamlit columns"""
+    """Render a compact, professional job card"""
     
     # Calculate values
     progress_pct = (actual / budget * 100) if budget > 0 else 0
     margin = ((contract - actual) / contract * 100) if contract > 0 else 0
-    border_color = "#DC2626" if is_over_budget else "#10B981"
+    card_class = "job-card-over-budget" if is_over_budget else "job-card-on-track"
+    progress_color = "#DC2626" if is_over_budget else "#10B981"
     
-    # Create card with border
-    st.markdown(f"""
-    <div style="border-left: 4px solid {border_color}; padding-left: 0;">
-    """, unsafe_allow_html=True)
+    # Render card
+    st.markdown(f'<div class="job-card {card_class}">', unsafe_allow_html=True)
     
-    # Create 3-column layout
+    # Job header
     col1, col2, col3 = st.columns([2, 1.2, 1])
     
     with col1:
-        st.markdown(f"**{job.get('job_name', 'Untitled Job')}**")
-        st.caption(f"#{job.get('job_number', 'N/A')} · {job.get('customer_name', 'No customer')}")
+        st.markdown(f'<div class="job-name">{job.get("job_name", "Untitled Job")}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="job-meta">#{job.get("job_number", "N/A")} · {job.get("customer_name", "No customer")}</div>', unsafe_allow_html=True)
         
         st.write("")
-        st.caption("BUDGET")
-        st.markdown(f"**${budget:,.0f}**")
+        st.markdown('<div class="budget-label">BUDGET</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="budget-value">${budget:,.0f}</div>', unsafe_allow_html=True)
         
         # Progress bar
-        progress_color = "#DC2626" if is_over_budget else "#10B981"
         st.markdown(f"""
-        <div style="width: 100%; background: #F1F5F9; height: 6px; border-radius: 3px; margin-top: 0.5rem;">
-            <div style="width: {min(progress_pct, 100):.1f}%; background: {progress_color}; height: 100%; border-radius: 3px;"></div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {min(progress_pct, 100):.1f}%; background: {progress_color};"></div>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
-        st.caption("ACTUAL")
-        st.markdown(f"### $ {actual:,.0f}")
+        st.markdown('<div class="budget-label">ACTUAL</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size: 1.5rem; font-weight: 700; color: #0F172A;">${actual:,.0f}</div>', unsafe_allow_html=True)
         
+        # Status badge
         if is_over_budget:
-            st.markdown("""
-            <div style="background: #FEE2E2; color: #DC2626; padding: 0.25rem 0.75rem; 
-                        border-radius: 4px; font-size: 0.6875rem; font-weight: 600; 
-                        display: inline-block; margin-top: 0.5rem;">
-                ⚠️ Over Budget
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown('<div class="status-badge badge-over">⚠️ Over Budget</div>', unsafe_allow_html=True)
         else:
-            st.markdown(f"""
-            <div style="background: #D1FAE5; color: #059669; padding: 0.25rem 0.75rem; 
-                        border-radius: 4px; font-size: 0.6875rem; font-weight: 600; 
-                        display: inline-block; margin-top: 0.5rem;">
-                ✓ {margin:.1f}% margin
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f'<div class="status-badge badge-success">✓ {margin:.1f}% margin</div>', unsafe_allow_html=True)
         
-        st.caption("Last cost: 3 days ago")
+        st.markdown('<div style="font-size: 0.6875rem; color: #94A3B8; margin-top: 0.5rem;">Last cost: 3 days ago</div>', unsafe_allow_html=True)
     
     with col3:
-        st.caption("ACTUAL")
-        st.markdown(f"### $ {actual:,.0f}")
+        st.markdown('<div class="budget-label">ACTUAL</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size: 1.25rem; font-weight: 700; color: #0F172A;">${actual:,.0f}</div>', unsafe_allow_html=True)
     
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("<hr style='margin: 0.75rem 0; border: none; border-top: 1px solid #E2E8F0;'>", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # --------------------------------------------------
@@ -333,30 +490,33 @@ def main():
     branding = get_branding()
     primary_color = branding.get("primary_color", "#6366F1")
     
-    # Apply shared styles first
+    # Apply styles
     st.markdown(get_professional_css(primary_color), unsafe_allow_html=True)
-    
-    # Apply dashboard-specific styles
     apply_dashboard_styles()
 
     # Render sidebar
     render_sidebar(branding)
 
-    # Header
-    header_col1, header_col2 = st.columns([3, 1])
+    # ============================================
+    # HEADER - Professional Layout
+    # ============================================
+    header_left, header_right = st.columns([3, 1])
     
-    with header_col1:
-        st.markdown(f"""
+    with header_left:
+        st.markdown("""
         <div class="dashboard-title">Dashboard</div>
-        <div class="dashboard-subtitle">{branding["company_name"]} • Job Costing Overview</div>
+        <div class="dashboard-subtitle">Elite Wall Pro • Job Costing Overview</div>
         """, unsafe_allow_html=True)
     
-    with header_col2:
+    with header_right:
         btn1, btn2 = st.columns(2)
         with btn1:
-            st.button("📥 Export", key="export_btn", use_container_width=True)
+            st.markdown('<button class="action-btn-small">📥 Export</button>', unsafe_allow_html=True)
         with btn2:
-            st.button("📅 Date Range", key="date_btn", use_container_width=True)
+            st.markdown('<button class="action-btn-small">📅 Date Range</button>', unsafe_allow_html=True)
+
+    # Small divider
+    st.markdown('<div style="height: 1rem;"></div>', unsafe_allow_html=True)
 
     api = st.session_state.api_client
 
@@ -395,11 +555,13 @@ def main():
             
             if contract > 0:
                 margin = ((contract - actual) / contract * 100)
-                if 0 <= margin < 10:
+                if 0 <= margin < 10 and actual > 0:
                     near_threshold_jobs.append(job)
 
-        # Financial Snapshot
-        st.markdown("### Financial Snapshot")
+        # ============================================
+        # FINANCIAL SNAPSHOT - Compact Section
+        # ============================================
+        st.markdown('<div class="section-header">Financial Snapshot</div>', unsafe_allow_html=True)
         
         m1, m2, m3, m4 = st.columns(4)
         
@@ -418,40 +580,62 @@ def main():
                      delta=f"{len(over_budget_jobs)} over budget" if len(over_budget_jobs) > 0 else "All on track",
                      delta_color="inverse" if len(over_budget_jobs) > 0 else "normal")
 
-        # Alert Badges
+        # Alert Badges - Compact
         if len(over_budget_jobs) > 0 or len(near_threshold_jobs) > 0:
             badge_html = ""
             if len(over_budget_jobs) > 0:
                 badge_html += f'<span class="alert-badge badge-danger">🔴 {len(over_budget_jobs)} Job{"s" if len(over_budget_jobs) > 1 else ""} Over Budget</span>'
             if len(near_threshold_jobs) > 0:
-                badge_html += f'<span class="alert-badge badge-warning">⚠️ {len(near_threshold_jobs)} Job{"s" if len(near_threshold_jobs) > 1 else ""} Near Margin Threshold</span>'
+                badge_html += f'<span class="alert-badge badge-warning">⚠️ {len(near_threshold_jobs)} Job{"s" if len(near_threshold_jobs) > 1 else ""} Near Threshold</span>'
             
             st.markdown(badge_html, unsafe_allow_html=True)
 
-        # Main Layout
-        col_jobs, col_qa = st.columns([2.5, 1], gap="large")
+        # Reduced spacing
+        st.markdown('<div style="height: 0.5rem;"></div>', unsafe_allow_html=True)
+
+        # ============================================
+        # MAIN LAYOUT - Jobs + Sidebar Panels
+        # ============================================
+        col_jobs, col_sidebar = st.columns([2.5, 1], gap="large")
 
         with col_jobs:
-            st.markdown("### Active Jobs")
+            # Section Header
+            st.markdown('<div class="section-header">Active Jobs</div>', unsafe_allow_html=True)
             
-            st.markdown('<div class="job-card-container">', unsafe_allow_html=True)
+            # Search Bar under Active Jobs heading
+            search_query = st.text_input("🔍 Search jobs...", placeholder="Search by job name, number, or customer", label_visibility="collapsed", key="job_search")
             
-            for job in active_jobs:
-                job_id = job["id"]
-                budget = calculate_total_budget(job)
-                actual = job_costs.get(job_id, 0)
-                contract = float(job.get("contract_amount") or 0)
-                is_over_budget = actual > budget if budget > 0 else False
-                
-                render_job_card(job, budget, actual, contract, is_over_budget)
+            # Filter jobs if search query exists
+            filtered_jobs = active_jobs
+            if search_query:
+                search_lower = search_query.lower()
+                filtered_jobs = [
+                    j for j in active_jobs 
+                    if search_lower in j.get("job_name", "").lower() 
+                    or search_lower in j.get("job_number", "").lower()
+                    or search_lower in j.get("customer_name", "").lower()
+                ]
             
-            st.markdown('</div>', unsafe_allow_html=True)
+            # Render job cards with tight spacing
+            if filtered_jobs:
+                for job in filtered_jobs:
+                    job_id = job["id"]
+                    budget = calculate_total_budget(job)
+                    actual = job_costs.get(job_id, 0)
+                    contract = float(job.get("contract_amount") or 0)
+                    is_over_budget = actual > budget if budget > 0 else False
+                    
+                    render_job_card(job, budget, actual, contract, is_over_budget)
+            else:
+                st.info(f"No jobs found matching '{search_query}'")
 
-        with col_qa:
-            # Quick Actions
+        with col_sidebar:
+            # ============================================
+            # QUICK ACTIONS - Consolidated Panel
+            # ============================================
             st.markdown("""
-            <div class="qa-panel">
-                <div class="qa-title">Quick Actions</div>
+            <div class="panel-section">
+                <div class="panel-title">Quick Actions</div>
             </div>
             """, unsafe_allow_html=True)
             
@@ -467,9 +651,11 @@ def main():
             if st.button("📊 View Reports", use_container_width=True, key="qa_reports"):
                 st.switch_page("pages/6_Reports.py")
             
-            # Chart
+            # ============================================
+            # BUDGET VS ACTUAL - Separate Panel
+            # ============================================
             st.markdown("""
-            <div class="chart-container">
+            <div class="chart-section">
                 <div class="chart-title">Budget vs Actual (Top 5)</div>
             </div>
             """, unsafe_allow_html=True)
@@ -477,7 +663,7 @@ def main():
             top_5 = sorted(active_jobs, key=lambda x: float(x.get("contract_amount") or 0), reverse=True)[:5]
             
             if top_5:
-                labels = [j.get("job_number", "")[:8] for j in top_5]
+                labels = [j.get("job_number", "")[:10] for j in top_5]
                 budgets = [calculate_total_budget(j) for j in top_5]
                 actuals = [job_costs.get(j["id"], 0) for j in top_5]
                 
@@ -488,20 +674,37 @@ def main():
                 
                 fig.update_layout(
                     barmode='group',
-                    height=280,
+                    height=260,
                     margin=dict(l=10, r=10, t=10, b=40),
                     showlegend=False,
                     plot_bgcolor='white',
-                    xaxis=dict(showgrid=False, showline=True, linecolor='#E2E8F0', 
-                              tickfont=dict(size=10, color='#64748B')),
-                    yaxis=dict(showgrid=True, gridcolor='#F1F5F9', showline=False, 
-                              tickfont=dict(size=10, color='#64748B'))
+                    xaxis=dict(
+                        showgrid=False, 
+                        showline=True, 
+                        linecolor='#E2E8F0', 
+                        tickfont=dict(size=10, color='#64748B'),
+                        tickangle=-45
+                    ),
+                    yaxis=dict(
+                        showgrid=True, 
+                        gridcolor='#F1F5F9', 
+                        showline=False, 
+                        tickfont=dict(size=10, color='#64748B'),
+                        tickformat='$,.0f'
+                    )
                 )
                 
                 st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     except Exception as e:
         st.error(f"⚠️ Error loading dashboard: {str(e)}")
+        
+        with st.expander("Debug Information"):
+            import traceback
+            st.code(traceback.format_exc())
+        
+        if st.button("🔄 Retry"):
+            st.rerun()
 
 
 if __name__ == "__main__":
