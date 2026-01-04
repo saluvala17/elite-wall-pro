@@ -52,8 +52,8 @@ def render_sidebar(branding: dict):
         if st.button("🏠  Dashboard", key="nav_dashboard", use_container_width=True):
             st.switch_page("app.py")
         
-        if st.button("📊  Analytics", key="nav_analytics", use_container_width=True):
-            st.switch_page("pages/1_Dashboard.py")
+        # if st.button("📊  Analytics", key="nav_analytics", use_container_width=True):
+        #     st.switch_page("pages/1_Dashboard.py")
         
         if st.button("📋  Jobs", key="nav_jobs", use_container_width=True):
             st.switch_page("pages/2_Jobs.py")
