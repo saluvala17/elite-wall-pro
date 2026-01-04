@@ -31,19 +31,19 @@ def render_sidebar(branding: dict):
             """, unsafe_allow_html=True)
         
         # User info
-        user = st.session_state.get("user", {})
-        if user:
-            st.markdown(f"""
-            <div class='ewp-user-pill'>
-                <div style='display:flex;align-items:center;gap:12px'>
-                    <div class='ewp-user-avatar'>👤</div>
-                    <div>
-                        <div class='ewp-user-name'>{user.get('name', 'User')}</div>
-                        <div class='ewp-user-role'>{user.get('role', 'Employee').title()}</div>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+        # user = st.session_state.get("user", {})
+        # if user:
+        #     st.markdown(f"""
+        #     <div class='ewp-user-pill'>
+        #         <div style='display:flex;align-items:center;gap:12px'>
+        #             <div class='ewp-user-avatar'>👤</div>
+        #             <div>
+        #                 <div class='ewp-user-name'>{user.get('name', 'User')}</div>
+        #                 <div class='ewp-user-role'>{user.get('role', 'Employee').title()}</div>
+        #             </div>
+        #         </div>
+        #     </div>
+        #     """, unsafe_allow_html=True)
         
         st.markdown('<div style="margin: 20px 0;"></div>', unsafe_allow_html=True)
         
