@@ -1,6 +1,6 @@
 """
 Elite Wall Pro - Professional Dashboard
-Enhanced: Industry-standard spacing, alignment, and visual hierarchy
+Final Enhancement: All UI refinements applied
 """
 
 import streamlit as st
@@ -78,7 +78,7 @@ def get_branding():
 
 
 # --------------------------------------------------
-# Enhanced Dashboard CSS - Professional Spacing
+# Enhanced Dashboard CSS - Final Version
 # --------------------------------------------------
 def apply_dashboard_styles():
     st.markdown(
@@ -135,7 +135,7 @@ def apply_dashboard_styles():
             font-weight: 700;
             color: #0F172A;
             margin-top: 1rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0;
             letter-spacing: -0.01em;
         }
         
@@ -168,6 +168,47 @@ def apply_dashboard_styles():
             color: #0F172A !important;
         }
         
+        /* Custom Metric Card - Inline Layout */
+        .custom-metric-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            min-height: 115px;
+            transition: all 0.2s ease;
+        }
+        
+        .custom-metric-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        
+        .metric-label-custom {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value-inline {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+        }
+        
+        .metric-main-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #0F172A;
+        }
+        
+        .metric-sub-value {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
         /* Alert Badges - Compact */
         .alert-badge {
             display: inline-block;
@@ -189,13 +230,13 @@ def apply_dashboard_styles():
             color: #D97706;
         }
         
-        /* Job Cards - Compact Professional Spacing */
+        /* MODIFICATION 2: Job Cards - Ultra Compact Spacing */
         .job-card {
             background: white;
             border: 1px solid #E2E8F0;
             border-radius: 8px;
             padding: 1rem 1.25rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.375rem;  /* CHANGED: Reduced from 0.5rem to 0.375rem */
             transition: all 0.2s ease;
             border-left-width: 3px;
         }
@@ -217,6 +258,15 @@ def apply_dashboard_styles():
         /* Search Bar Styling */
         .search-container {
             margin-bottom: 0.75rem;
+        }
+        
+        /* Make search input align with header */
+        [data-testid="stTextInput"] {
+            margin-bottom: 0 !important;
+        }
+        
+        [data-testid="stTextInput"] > div {
+            margin-bottom: 0 !important;
         }
         
         .search-container input {
@@ -476,6 +526,7 @@ def render_job_card(job, budget, actual, contract, is_over_budget):
         st.markdown(f'<div style="font-size: 1.25rem; font-weight: 700; color: #0F172A;">${actual:,.0f}</div>', unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
+    # MODIFICATION 2: Removed <hr> separator - spacing handled by margin-bottom
 
 
 # --------------------------------------------------
@@ -571,14 +622,33 @@ def main():
         with m2:
             st.metric("CONTRACT VALUE", f"${total_contract:,.0f}")
         
+        # MODIFICATION 3: Custom metric with inline margin
         with m3:
-            st.metric("TOTAL COSTS", f"${total_costs:,.0f}", 
-                     delta=f"{total_margin:.1f}% margin")
+            st.markdown(f"""
+            <div class="custom-metric-card">
+                <div class="metric-label-custom">TOTAL COSTS</div>
+                <div class="metric-value-inline">
+                    <div class="metric-main-value">${total_costs:,.0f}</div>
+                    <div class="metric-sub-value" style="color: #059669;">↑ {total_margin:.1f}%</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
         
+        # MODIFICATION 4: Custom metric with inline over budget
         with m4:
-            st.metric("RISK ALERTS", len(over_budget_jobs), 
-                     delta=f"{len(over_budget_jobs)} over budget" if len(over_budget_jobs) > 0 else "All on track",
-                     delta_color="inverse" if len(over_budget_jobs) > 0 else "normal")
+            over_budget_count = len(over_budget_jobs)
+            sub_color = '#DC2626' if over_budget_count > 0 else '#059669'
+            sub_text = f'↓ {over_budget_count} over' if over_budget_count > 0 else '✓ All on track'
+            
+            st.markdown(f"""
+            <div class="custom-metric-card">
+                <div class="metric-label-custom">RISK ALERTS</div>
+                <div class="metric-value-inline">
+                    <div class="metric-main-value">{over_budget_count}</div>
+                    <div class="metric-sub-value" style="color: {sub_color};">{sub_text}</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
         # Alert Badges - Compact
         if len(over_budget_jobs) > 0 or len(near_threshold_jobs) > 0:
@@ -599,11 +669,20 @@ def main():
         col_jobs, col_sidebar = st.columns([2.5, 1], gap="large")
 
         with col_jobs:
-            # Section Header
-            st.markdown('<div class="section-header">Active Jobs</div>', unsafe_allow_html=True)
+            # MODIFICATION 1: Search beside Active Jobs header
+            header_col, search_col = st.columns([1, 1.5])
             
-            # Search Bar under Active Jobs heading
-            search_query = st.text_input("🔍 Search jobs...", placeholder="Search by job name, number, or customer", label_visibility="collapsed", key="job_search")
+            with header_col:
+                st.markdown('<div class="section-header">Active Jobs</div>', unsafe_allow_html=True)
+            
+            with search_col:
+                search_query = st.text_input("🔍 Search jobs...", 
+                                            placeholder="Search by job name, number, or customer", 
+                                            label_visibility="collapsed", 
+                                            key="job_search")
+            
+            # Small spacing
+            st.markdown('<div style="height: 0.75rem;"></div>', unsafe_allow_html=True)
             
             # Filter jobs if search query exists
             filtered_jobs = active_jobs
@@ -616,7 +695,7 @@ def main():
                     or search_lower in j.get("customer_name", "").lower()
                 ]
             
-            # Render job cards with tight spacing
+            # Render job cards with ultra-tight spacing
             if filtered_jobs:
                 for job in filtered_jobs:
                     job_id = job["id"]
