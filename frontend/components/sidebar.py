@@ -30,8 +30,8 @@ def render_sidebar(branding: dict):
             </div>
             """, unsafe_allow_html=True)
         
-        # User info
-        # user = st.session_state.get("user", {})
+        # User info - COMMENTED OUT (not displayed, but we still need the variable)
+        user = st.session_state.get("user", {})
         # if user:
         #     st.markdown(f"""
         #     <div class='ewp-user-pill'>
@@ -52,6 +52,7 @@ def render_sidebar(branding: dict):
         if st.button("🏠  Dashboard", key="nav_dashboard", use_container_width=True):
             st.switch_page("app.py")
         
+        # Analytics removed - no longer needed
         # if st.button("📊  Analytics", key="nav_analytics", use_container_width=True):
         #     st.switch_page("pages/1_Dashboard.py")
         
