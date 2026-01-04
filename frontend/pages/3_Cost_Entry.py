@@ -32,7 +32,7 @@ from components.shared_styles import get_professional_css
 from components.sidebar import render_sidebar
 
 # Get branding
-tenant = st.session_state.get("tenant", {})
+tenant = st.session_state.get("tenant") or {}
 branding = tenant.get("branding", {"primary_color": "#6366F1", "company_name": "Elite Wall Pro"})
 primary_color = branding.get("primary_color", "#6366F1")
 
