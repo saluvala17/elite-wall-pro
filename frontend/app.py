@@ -469,7 +469,7 @@ def calculate_days_since_last_cost(api, job_id):
 # ============================================
 
 def render_job_card(job, job_costs, job_budgets, customer_name):
-    """Render professional job card with dual progress bar and financial indicators"""
+    """Render professional job card with duals progress bar and financial indicat"""
     
     job_id = job["id"]
     job_number = job.get("job_number", "N/A")
