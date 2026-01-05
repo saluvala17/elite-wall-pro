@@ -505,57 +505,57 @@ def render_job_card(job, job_costs, job_budgets, customer_name):
     days_since = calculate_days_since_last_cost(st.session_state.api_client, job_id)
     freshness_text = f"Last cost entry: {days_since} days ago" if days_since else "No cost entries"
     
-    # Render card
-    st.markdown(f"""
-    <div class="job-card">
-        <div class="job-header">
-            <div class="job-info">
-                <div class="job-number">{job_number}</div>
-                <div class="job-name">{job_name}</div>
-                <div class="job-customer">📍 {customer_name}</div>
-            </div>
-            <div class="job-status-badge {status_class}">
-                {status_text}
-            </div>
-        </div>
+    # Create job card using columns for proper layout
+    card_container = st.container()
+    
+    with card_container:
+        # Header section
+        header_col1, header_col2 = st.columns([3, 1])
         
-        <div class="dual-progress-container">
-            <div class="progress-label">
-                <span>Contract: ${contract:,.0f}</span>
-                <span>Actual: ${actual:,.0f}</span>
-            </div>
-            <div class="dual-progress">
-                <div class="progress-base" style="width: {budget_pct}%;"></div>
-                <div class="progress-actual" style="width: {actual_pct}%; background: {progress_color};"></div>
-            </div>
-        </div>
+        with header_col1:
+            st.markdown(f"**{job_number}**")
+            st.markdown(f"### {job_name}")
+            st.caption(f"📍 {customer_name}")
         
-        <div class="financial-metrics">
-            <div class="metric-item">
-                <div class="metric-label">Variance</div>
-                <div class="metric-value {'value-positive' if variance >= 0 else 'value-negative'}">
-                    ${abs(variance):,.0f} {'under' if variance >= 0 else 'over'}
-                </div>
-            </div>
-            <div class="metric-item">
-                <div class="metric-label">Margin</div>
-                <div class="metric-value {'value-positive' if margin > 10 else 'value-negative' if margin < 0 else 'value-neutral'}">
-                    {margin:.1f}%
-                </div>
-            </div>
-            <div class="metric-item">
-                <div class="metric-label">Budget Used</div>
-                <div class="metric-value value-neutral">
-                    {actual_pct:.0f}%
-                </div>
-            </div>
-        </div>
+        with header_col2:
+            if actual > contract:
+                st.error(status_text)
+            elif actual > (contract * 0.85):
+                st.warning(status_text)
+            else:
+                st.success(status_text)
         
-        <div class="freshness-indicator">
-            🕒 {freshness_text}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        # Progress section
+        st.caption(f"Contract: ${contract:,.0f} | Actual: ${actual:,.0f}")
+        st.progress(actual_pct / 100, text=f"{actual_pct:.0f}% of contract")
+        
+        # Financial metrics
+        metric_col1, metric_col2, metric_col3 = st.columns(3)
+        
+        with metric_col1:
+            st.metric(
+                "Variance",
+                f"${abs(variance):,.0f}",
+                f"{'under' if variance >= 0 else 'over'} budget",
+                delta_color="normal" if variance >= 0 else "inverse"
+            )
+        
+        with metric_col2:
+            st.metric(
+                "Margin",
+                f"{margin:.1f}%",
+                "profit margin"
+            )
+        
+        with metric_col3:
+            st.metric(
+                "Budget Used",
+                f"{actual_pct:.0f}%",
+                "of contract"
+            )
+        
+        st.caption(f"🕒 {freshness_text}")
+        st.divider()
 
 
 # ============================================
